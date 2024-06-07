@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                  // iOS 13 이상에서는 SceneDelegate에서 설정합니다.
              } else {
                  window = UIWindow(frame: UIScreen.main.bounds)
-                       let todoViewController = MainViewController()
+                       let todoViewController = TodoViewController(memberId: 5)
                        window?.rootViewController = UINavigationController(rootViewController: todoViewController)
                        window?.makeKeyAndVisible()
              }

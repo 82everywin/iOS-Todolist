@@ -12,7 +12,7 @@ struct Todo: Codable{
     var todoId: Int
     var content: String
     var checked: Bool
-    var category: Category
+    var category: CategoryResponse
 }
 
 

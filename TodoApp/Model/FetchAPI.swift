@@ -60,16 +60,16 @@ class FetchAPI {
         try await fetchAPI(.deleteTodo(todoId: todoId))
     }
     
-    func addCategory(memberId: Int, category: AddCategory) async throws -> AddCategory {
+    func addCategory(memberId: Int, category: CategoryRequest) async throws -> CategoryResponse {
         try await fetchAPI(.addCategory(memberId: memberId, item: category))
     }
-    func getCategory(memberId: Int) async throws -> [Category] {
+    func getCategory(memberId: Int) async throws -> [CategoryResponse] {
         try await fetchAPI(.getCategory(memberId: memberId))
     }
-    func updateCategory(categoryId: Int, category: Category) async throws -> Category {
+    func updateCategory(categoryId: Int, category: CategoryRequest) async throws -> CategoryResponse {
         try await fetchAPI(.updateCategory(categoryId: categoryId, item: category))
     }
-    func deleteCategory(categoryId: Int) async throws -> [Category] {
+    func deleteCategory(categoryId: Int) async throws -> Msg {
         try await fetchAPI(.deleteCategory(categoryId: categoryId))
     }
     func signIn(data: SignIn) async throws -> LoginResponse {

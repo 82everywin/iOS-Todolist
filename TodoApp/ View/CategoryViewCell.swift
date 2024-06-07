@@ -15,7 +15,7 @@ class CategoryViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 12)
-   //     label.layer.masksToBounds = true
+        label.layer.cornerRadius = 25
         return label
     }()
         
@@ -39,7 +39,7 @@ class CategoryViewCell: UICollectionViewCell {
         }
     }
         
-    func configure(with category: Category) {
+    func configure(with category: CategoryResponse) {
         label.text = category.content
         contentView.layer.backgroundColor = UIColor(hexCode: category.color).cgColor
         contentView.layer.borderColor = UIColor(hexCode: category.color).cgColor

@@ -16,6 +16,9 @@
 		8B6DB39E2C0F07E000804DE9 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB39D2C0F07E000804DE9 /* MyPageViewController.swift */; };
 		8B6DB3A02C101BD800804DE9 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB39F2C101BD800804DE9 /* SignIn.swift */; };
 		8B6DB3A22C10490500804DE9 /* SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB3A12C10490500804DE9 /* SignUp.swift */; };
+		8B6DB3A42C107E0A00804DE9 /* ResponseMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB3A32C107E0A00804DE9 /* ResponseMsg.swift */; };
+		8B6DB3A72C1088E600804DE9 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB3A62C1088E600804DE9 /* CustomLabel.swift */; };
+		8B6DB3A92C108E5E00804DE9 /* BoldThinColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB3A82C108E5E00804DE9 /* BoldThinColor.swift */; };
 		8B8725582C02797800E2B9F8 /* CategoryViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8725572C02797800E2B9F8 /* CategoryViewCell.swift */; };
 		8B87255A2C0279D900E2B9F8 /* Extension+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8725592C0279D900E2B9F8 /* Extension+.swift */; };
 		8B87255C2C027C3A00E2B9F8 /* TodoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B87255B2C027C3A00E2B9F8 /* TodoViewCell.swift */; };
@@ -42,6 +45,9 @@
 		8B6DB39D2C0F07E000804DE9 /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		8B6DB39F2C101BD800804DE9 /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		8B6DB3A12C10490500804DE9 /* SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUp.swift; sourceTree = "<group>"; };
+		8B6DB3A32C107E0A00804DE9 /* ResponseMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseMsg.swift; sourceTree = "<group>"; };
+		8B6DB3A62C1088E600804DE9 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
+		8B6DB3A82C108E5E00804DE9 /* BoldThinColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoldThinColor.swift; sourceTree = "<group>"; };
 		8B8725572C02797800E2B9F8 /* CategoryViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewCell.swift; sourceTree = "<group>"; };
 		8B8725592C0279D900E2B9F8 /* Extension+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+.swift"; sourceTree = "<group>"; };
 		8B87255B2C027C3A00E2B9F8 /* TodoViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewCell.swift; sourceTree = "<group>"; };
@@ -93,6 +99,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		8B6DB3A52C1088D300804DE9 /* Extra */ = {
+			isa = PBXGroup;
+			children = (
+				8B6DB3A62C1088E600804DE9 /* CustomLabel.swift */,
+				8B6DB3A82C108E5E00804DE9 /* BoldThinColor.swift */,
+			);
+			path = Extra;
+			sourceTree = "<group>";
+		};
 		8BBC51A92C020127005EB184 = {
 			isa = PBXGroup;
 			children = (
@@ -114,6 +129,7 @@
 		8BBC51B42C020127005EB184 /* TodoApp */ = {
 			isa = PBXGroup;
 			children = (
+				8B6DB3A52C1088D300804DE9 /* Extra */,
 				8BBC51CB2C02017C005EB184 /*  View */,
 				8BBC51B52C020127005EB184 /* AppDelegate.swift */,
 				8BBC51B72C020127005EB184 /* SceneDelegate.swift */,
@@ -144,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				8B6DB3932C0F051A00804DE9 /* Member.swift */,
+				8B6DB3A32C107E0A00804DE9 /* ResponseMsg.swift */,
 				8B8725652C087DBB00E2B9F8 /* EndPoint.swift */,
 				8BBC51D22C025E24005EB184 /* Todo.swift */,
 				8B6DB39F2C101BD800804DE9 /* SignIn.swift */,
@@ -281,6 +298,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B6DB3A02C101BD800804DE9 /* SignIn.swift in Sources */,
+				8B6DB3A92C108E5E00804DE9 /* BoldThinColor.swift in Sources */,
 				8BBC51D32C025E24005EB184 /* Todo.swift in Sources */,
 				8B6DB3A22C10490500804DE9 /* SignUp.swift in Sources */,
 				8B6DB3922C0EFD7300804DE9 /* CustomColor.swift in Sources */,
@@ -292,9 +310,11 @@
 				8B6DB3942C0F051A00804DE9 /* Member.swift in Sources */,
 				8B8725602C05DB5900E2B9F8 /* AddCategoryCell.swift in Sources */,
 				8BBC51D12C020748005EB184 /* TodoViewController.swift in Sources */,
+				8B6DB3A42C107E0A00804DE9 /* ResponseMsg.swift in Sources */,
 				8B8725662C087DBB00E2B9F8 /* EndPoint.swift in Sources */,
 				8B6DB3962C0F055200804DE9 /* SignupViewController.swift in Sources */,
 				8B8725582C02797800E2B9F8 /* CategoryViewCell.swift in Sources */,
+				8B6DB3A72C1088E600804DE9 /* CustomLabel.swift in Sources */,
 				8B8725642C0677FF00E2B9F8 /* TodoDetailViewController.swift in Sources */,
 				8B6DB39E2C0F07E000804DE9 /* MyPageViewController.swift in Sources */,
 				8B87255C2C027C3A00E2B9F8 /* TodoViewCell.swift in Sources */,

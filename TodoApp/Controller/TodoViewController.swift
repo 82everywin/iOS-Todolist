@@ -20,7 +20,7 @@ final class TodoViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var categories: [Category] = []
+    var categories: [CategoryResponse] = []
     var todos: [Todo] = []
     var currentMonth: Int = Calendar.current.component(.month, from: Date())
     var currentDay: Int = Calendar.current.component(.day, from: Date())
@@ -116,8 +116,8 @@ final class TodoViewController: UIViewController {
     private let addTodoButton: UIButton = {
        let button = UIButton()
         button.setTitle("TodoList 추가", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 24)
-        button.backgroundColor = UIColor(hexCode: "F5F5F5")
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 22)
+        button.backgroundColor = UIColor.grayBackgroud
         button.setTitleColor(UIColor(hexCode: "A2A2A2"), for: .normal)
         button.layer.cornerRadius = 10
         return button
@@ -212,7 +212,7 @@ final class TodoViewController: UIViewController {
             make.top.equalTo(monthLabel.snp.bottom).offset(30)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
-            make.height.equalTo(300)
+            make.height.equalTo(360)
         }
         
         totalTodoView.addSubview(dayLabel)
@@ -233,10 +233,10 @@ final class TodoViewController: UIViewController {
         
         self.view.addSubview(addTodoButton)
         self.addTodoButton.snp.makeConstraints{ make in
-            make.top.equalTo(todoView.snp.bottom).offset(20)
-            make.leading.equalTo(view).offset(10)
-            make.trailing.equalTo(view).offset(-10)
-            make.height.equalTo(40)
+            make.top.equalTo(totalTodoView.snp.bottom).offset(20)
+            make.leading.equalTo(view).offset(15)
+            make.trailing.equalTo(view).offset(-15)
+            make.height.equalTo(60)
         }
     }
     
@@ -330,7 +330,7 @@ extension TodoViewController: UICollectionViewDataSource, UICollectionViewDelega
         }else {
             return todos.count
         }
-}
+    }
         
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -338,7 +338,6 @@ extension TodoViewController: UICollectionViewDataSource, UICollectionViewDelega
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryViewCell.identifier, for: indexPath) as? CategoryViewCell else {
                     return UICollectionViewCell()
                 }
-                cell.layer.cornerRadius = 40
                 let category = categories[indexPath.item]
                 cell.configure(with: category)
                 return cell
@@ -370,7 +369,7 @@ extension TodoViewController: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == categoryView && indexPath.item < categories.count {
             let selectedCategory = categories[indexPath.item]
-            let categoryVC = CategoryDetailViewController()
+            let categoryVC = CategoryDetailViewController(memberId: self.memberId)
             categoryVC.selectedCategory = selectedCategory
             navigationController?.pushViewController(categoryVC, animated: true)
         }
@@ -389,7 +388,7 @@ extension TodoViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     @objc func addCategory(){
-        let addCateVC = CategoryDetailViewController()
+        let addCateVC = CategoryDetailViewController(memberId: self.memberId)
         navigationController?.pushViewController(addCateVC, animated: true)
     }
     
