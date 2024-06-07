@@ -78,7 +78,7 @@ extension UIColor {
     static let thinPink = UIColor(hexCode: "FFF5F9")
     static let thinYellow = UIColor(hexCode: "FFFDEE")
     static let thinGreen = UIColor(hexCode: "F0FFFE")
-    static let thinPurple = UIColor(hexCode: "B6B0F9")
+    static let thinPurple = UIColor(hexCode: "e4e1fe")
 }
 
 

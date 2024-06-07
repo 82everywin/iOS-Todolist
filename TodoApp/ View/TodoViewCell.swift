@@ -22,7 +22,7 @@ final class TodoViewCell: UICollectionViewCell {
     private let todoLabel: CustomLabel = {
         let label = CustomLabel()
         label.textAlignment = .left
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = UIColor.labelFontColor
         label.layer.cornerRadius = 10
         label.layer.masksToBounds = true
@@ -50,14 +50,14 @@ final class TodoViewCell: UICollectionViewCell {
     func setUpViews() {
         contentView.addSubview(circleView)
         self.circleView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(4)
+            make.leading.equalToSuperview().offset(8)
             make.centerY.equalToSuperview()
             make.width.height.equalTo(26)
         }
         
         contentView.addSubview(todoContainerView)
         self.todoContainerView.snp.makeConstraints{ make in
-            make.leading.equalTo(circleView.snp.trailing).offset(10)
+            make.leading.equalTo(circleView.snp.trailing).offset(6)
             make.centerY.equalToSuperview()
             make.trailing.equalToSuperview().offset(-10)
             make.height.equalToSuperview()
@@ -92,7 +92,7 @@ final class TodoViewCell: UICollectionViewCell {
             todoLabel.backgroundColor = UIColor.white
         }
         
-        print("color \(UIColor(hexCode: item.category.color) ) &&&&& \(todoLabel.backgroundColor)")
+//        print("color \(UIColor(hexCode: item.category.color) ) &&&&& \(todoLabel.backgroundColor)")
 //        todoLabel.backgroundColor = UIColor.white
     }
 }
