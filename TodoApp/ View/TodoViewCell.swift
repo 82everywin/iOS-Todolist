@@ -11,7 +11,7 @@ import SnapKit
 
 final class TodoViewCell: UICollectionViewCell {
     
-    private var todo: Todo?
+    private var todo: TodoResponse?
     
     private let circleView: UIView = {
         let view = UIView()
@@ -59,7 +59,6 @@ final class TodoViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     func setUpViews() {
         contentView.addSubview(circleView)
         self.circleView.snp.makeConstraints { make in
@@ -85,16 +84,15 @@ final class TodoViewCell: UICollectionViewCell {
         todoLabel.snp.makeConstraints{ make in
             make.edges.equalTo(todoContainerView).inset(5)
         }
-        
     }
     
-    func configure(with item: Todo) {
+    func configure(with item: TodoResponse) {
         self.todo = item
         todoLabel.text = item.content
-        circleView.layer.borderColor = UIColor(hexCode: item.category.color).cgColor
-        circleView.backgroundColor = item.checked ? UIColor(hexCode: item.category.color) : .white
-        
         todoLabel.layer.borderColor = UIColor(hexCode: item.category.color).cgColor
+        
+        circleView.layer.borderColor = UIColor(hexCode: item.category.color).cgColor
+        updateCheckmarkUI(isChecked: item.checked)
         
         let categoryColorHex = item.category.color
         switch categoryColorHex {
@@ -109,37 +107,63 @@ final class TodoViewCell: UICollectionViewCell {
         default:
             todoLabel.backgroundColor = UIColor.white
         }
-        
-        checkmarkImageView.isHidden = !item.checked
-        if item.checked {
-               checkmarkImageView.image = UIImage(named: "checkmark") // 여기에 실제 이미지 이름을 넣으세요.
-        }
     }
     
     @objc func tapCircleView(_ sender: UITapGestureRecognizer){
+        guard let todo = todo else { return}
         
-        circleView.backgroundColor = UIColor(hexCode: (self.todo?.category.color)!)
-        checkmarkImageView.image = UIImage(named: "Check_Big")
-        checkmarkImageView.isHidden.toggle()
-        
-//        Task{
-//            do {
-//                let checkedCircle = try await FetchAPI.shared.updateTodo(todoId: todo?.todoId, todo: self.todo)
-//            }
-//        }
-        
+        let newCheckedState = !todo.checked
+    
+        Task{
+            do {
+                let category = CategoryRequest(content: todo.category.content, color: todo.category.color)
+                let updateTodo = TodoRequest(content: todo.content, checked: newCheckedState, setDate: todo.setDate, category: category)
+                let checkedCircle = try await FetchAPI.shared.updateTodo(todoId: self.todo!.todoId, todo: updateTodo)
+                print("Todo update : \(checkedCircle)")
+                
+                self.todo?.checked = newCheckedState
+                updateCheckmarkUI(isChecked: newCheckedState)
+            }
+            catch{
+                let alert = UIAlertController(title: "Error", message: "Failed to update TOdo", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+               // present(alert, animated: true, completion: nil )
+                print("Failed to update Todo: \(error)")
+            }
+        }
+    }
+    
+    private func updateCheckmarkUI(isChecked: Bool){
+        checkmarkImageView.isHidden = !isChecked
+        circleView.backgroundColor = isChecked ? UIColor(hexCode: (self.todo?.category.color)!) : .white
+        if isChecked {
+            checkmarkImageView.image = UIImage(named: "Check_Big")
+        }
+        else {
+            checkmarkImageView.image = nil
+        }
     }
 }
 
-
-
-//guard let content = categoryName.text, !content.isEmpty  else { return}
+//
+//guard let content = categoryName.text, !content.isEmpty,
+//      let color = selectedColor  else {
+//    let alert = UIAlertController(title: "Error", message: "양식을 채워주세요", preferredStyle: .alert)
+//    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//    present(alert, animated: true, completion: nil)
+//    return}
 //
 //Task {
 //    do {
 //        if selectedCategory != nil {
-//            let deletedCategory = try await FetchAPI.shared.deleteCategory(categoryId: categoryId!)
-//            print("Category update :\(deletedCategory)")
+//            let newCategory = CategoryRequest(content: content, color: color)
+//            let updatedCategory = try await FetchAPI.shared.updateCategory(categoryId: categoryId!, category: newCategory)
+//            print("Category update :\(updatedCategory)")
+//        }
+//        else {
+//            let newCategory = CategoryRequest(content: content, color: color)
+//            let addedCategory = try await FetchAPI.shared.addCategory(memberId: memberId, category: newCategory)
+//            print("Category added: \(addedCategory)")
 //        }
 //        
 //        navigationController?.popViewController(animated: true)

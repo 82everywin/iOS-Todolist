@@ -9,7 +9,8 @@ import Foundation
 import UIKit
 
 class TodoDetailViewController: UIViewController {
-    var selectedTodo : Todo?
+    var selectedTodo : TodoResponse?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()

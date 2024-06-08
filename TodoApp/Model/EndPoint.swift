@@ -19,7 +19,7 @@ enum FetchError: Error {
 enum EndPoint {
     case getTodo(memberId: Int)
     case addTodo(memberId: Int, item: AddTodo)
-    case updateTodo(todoId: Int, item: Todo)
+    case updateTodo(todoId: Int, item: TodoRequest)
     case deleteTodo(todoId: Int)
     case addCategory(memberId: Int, item: CategoryRequest)
     case getCategory(memberId: Int)

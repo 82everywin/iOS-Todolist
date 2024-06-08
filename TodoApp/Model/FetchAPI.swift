@@ -50,13 +50,13 @@ class FetchAPI {
     func addTodo(memberId: Int, todo: AddTodo) async throws -> AddTodo {
         try await fetchAPI(.addTodo(memberId: memberId, item: todo))
     }
-    func getTodo(memberId: Int) async throws -> [Todo] {
+    func getTodo(memberId: Int) async throws -> [TodoResponse] {
         try await fetchAPI(.getTodo(memberId: memberId))
     }
-    func updateTodo(todoId: Int, todo: Todo) async throws -> Todo {
+    func updateTodo(todoId: Int, todo: TodoRequest) async throws -> TodoResponse{
         try await fetchAPI(.updateTodo(todoId: todoId, item: todo))
     }
-    func deleteTodo(todoId: Int) async throws -> Todo{
+    func deleteTodo(todoId: Int) async throws -> Msg{
         try await fetchAPI(.deleteTodo(todoId: todoId))
     }
     

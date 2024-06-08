@@ -17,24 +17,23 @@ import Foundation
 //  "color": "FFFFFF"
 //}
 
-struct Todo: Codable{
+struct TodoResponse: Codable{
     var todoId: Int
     var content: String
     var checked: Bool
+    var setDate: String
     var category: CategoryResponse
 }
-
 
 struct AddTodo: Codable {
     var content: String
     var category: Category
 }
 
-struct TodoUpdateRequest: Codable{
-    var todoId: Int
+struct TodoRequest: Codable{
     var content: String
     var checked: Bool
-    var writeDate: Date
-    var setDate: Date
+    var setDate: String
     var category: CategoryRequest
 }
+

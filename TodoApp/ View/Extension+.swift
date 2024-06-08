@@ -81,4 +81,3 @@ extension UIColor {
     static let thinPurple = UIColor(hexCode: "e4e1fe")
 }
 
-

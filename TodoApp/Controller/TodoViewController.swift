@@ -21,7 +21,7 @@ final class TodoViewController: UIViewController {
     }
     
     var categories: [CategoryResponse] = []
-    var todos: [Todo] = []
+    var todos: [TodoResponse] = []
     var currentMonth: Int = Calendar.current.component(.month, from: Date())
     var currentDay: Int = Calendar.current.component(.day, from: Date())
     
