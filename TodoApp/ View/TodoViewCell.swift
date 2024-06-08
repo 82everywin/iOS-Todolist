@@ -11,6 +11,8 @@ import SnapKit
 
 final class TodoViewCell: UICollectionViewCell {
     
+    private var todo: Todo?
+    
     private let circleView: UIView = {
         let view = UIView()
         view.layer.borderWidth = 1
@@ -18,6 +20,13 @@ final class TodoViewCell: UICollectionViewCell {
         view.backgroundColor = .white
         return view
     }()
+    
+    private let checkmarkImageView: UIImageView = {
+          let imageView = UIImageView()
+          imageView.contentMode = .scaleAspectFit
+          imageView.isHidden = true // 초기에는 숨김 상태
+          return imageView
+      }()
     
     private let todoLabel: CustomLabel = {
         let label = CustomLabel()
@@ -40,6 +49,10 @@ final class TodoViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpViews()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapCircleView(_:))) // UIImageView 클릭 제스쳐
+        circleView.addGestureRecognizer(tapGesture)
+        circleView.isUserInteractionEnabled = true
     }
     
     required init?(coder: NSCoder) {
@@ -53,6 +66,11 @@ final class TodoViewCell: UICollectionViewCell {
             make.leading.equalToSuperview().offset(8)
             make.centerY.equalToSuperview()
             make.width.height.equalTo(26)
+        }
+        
+        circleView.addSubview(checkmarkImageView)
+        checkmarkImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(5)
         }
         
         contentView.addSubview(todoContainerView)
@@ -71,6 +89,7 @@ final class TodoViewCell: UICollectionViewCell {
     }
     
     func configure(with item: Todo) {
+        self.todo = item
         todoLabel.text = item.content
         circleView.layer.borderColor = UIColor(hexCode: item.category.color).cgColor
         circleView.backgroundColor = item.checked ? UIColor(hexCode: item.category.color) : .white
@@ -78,7 +97,6 @@ final class TodoViewCell: UICollectionViewCell {
         todoLabel.layer.borderColor = UIColor(hexCode: item.category.color).cgColor
         
         let categoryColorHex = item.category.color
-        print(categoryColorHex)
         switch categoryColorHex {
         case "F9B0CA":
             todoLabel.backgroundColor = UIColor.thinPink
@@ -92,8 +110,44 @@ final class TodoViewCell: UICollectionViewCell {
             todoLabel.backgroundColor = UIColor.white
         }
         
-//        print("color \(UIColor(hexCode: item.category.color) ) &&&&& \(todoLabel.backgroundColor)")
-//        todoLabel.backgroundColor = UIColor.white
+        checkmarkImageView.isHidden = !item.checked
+        if item.checked {
+               checkmarkImageView.image = UIImage(named: "checkmark") // 여기에 실제 이미지 이름을 넣으세요.
+        }
+    }
+    
+    @objc func tapCircleView(_ sender: UITapGestureRecognizer){
+        
+        circleView.backgroundColor = UIColor(hexCode: (self.todo?.category.color)!)
+        checkmarkImageView.image = UIImage(named: "Check_Big")
+        checkmarkImageView.isHidden.toggle()
+        
+//        Task{
+//            do {
+//                let checkedCircle = try await FetchAPI.shared.updateTodo(todoId: todo?.todoId, todo: self.todo)
+//            }
+//        }
+        
     }
 }
 
+
+
+//guard let content = categoryName.text, !content.isEmpty  else { return}
+//
+//Task {
+//    do {
+//        if selectedCategory != nil {
+//            let deletedCategory = try await FetchAPI.shared.deleteCategory(categoryId: categoryId!)
+//            print("Category update :\(deletedCategory)")
+//        }
+//        
+//        navigationController?.popViewController(animated: true)
+//        
+//    }catch {
+//        let alert = UIAlertController(title: "Error", message: "Failed to add category", preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//        present(alert, animated: true, completion: nil)
+//        print("Failed to add category: \(error)")
+//    }
+//}

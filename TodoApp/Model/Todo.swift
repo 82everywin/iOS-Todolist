@@ -7,6 +7,15 @@
 
 import Foundation
 
+//JSON - Request
+//"content": "친구랑 홍대",
+//"checked": true,
+//"writeDate": "2024-06-07",
+//"setDate": "2024-06-07",
+//"category": {
+//  "content": "약속",
+//  "color": "FFFFFF"
+//}
 
 struct Todo: Codable{
     var todoId: Int
@@ -19,4 +28,13 @@ struct Todo: Codable{
 struct AddTodo: Codable {
     var content: String
     var category: Category
+}
+
+struct TodoUpdateRequest: Codable{
+    var todoId: Int
+    var content: String
+    var checked: Bool
+    var writeDate: Date
+    var setDate: Date
+    var category: CategoryRequest
 }

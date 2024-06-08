@@ -239,8 +239,6 @@ final class CategoryDetailViewController: UIViewController {
         selectedColorMini.backgroundColor = UIColor(hexCode: selectedColor!)
         
         previousSeletedButton = sender
-        
-     
     }
     
     @objc func saveCategory() {
