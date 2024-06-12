@@ -72,7 +72,7 @@ class FetchAPI {
     func deleteCategory(categoryId: Int) async throws -> [Category] {
         try await fetchAPI(.deleteCategory(categoryId: categoryId))
     }
-    func signIn(data: SignIn) async throws -> LoginResponse {
+    func signIn(data: SignIn) async throws -> SignInResponse {
         try await fetchAPI(.signIn(item: data))
     }
     func signUp(data: Signup) async throws -> SignupResponse {

@@ -11,8 +11,19 @@ import SnapKit
 
 final class CategoryDetailViewController: UIViewController {
     
+    var accToken: String
+    
+    init(accToken: String){
+        self.accToken = accToken
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     var categoryId: Int?
-    var selectedCategory: Category?
+    var selectedCategory: CategoryResponse?
     
     private let categoryName: UITextField = {
         
@@ -77,8 +88,6 @@ final class CategoryDetailViewController: UIViewController {
         return button
     }()
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -87,6 +96,11 @@ final class CategoryDetailViewController: UIViewController {
         setUpViews()
         setupColorButtons()
         didSelectCategory()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     private func setUpViews() {
@@ -195,14 +209,13 @@ final class CategoryDetailViewController: UIViewController {
         
         Task {
             do {
-                let memberId = 1
                 if selectedCategory != nil {
-                    let newCategory = Category(categoryId: categoryId!, content: content, color: color)
+                    let newCategory = CategoryRequest(content: content, color: color)
                     let updatedCategory = try await FetchAPI.shared.updateCategory(categoryId: categoryId!, category: newCategory)
                     print("Category update :\(updatedCategory)")
                 }
                 else {
-                    let newCategory = AddCategory(content: content, color: color)
+                    let newCategory = CategoryRequest(content: content, color: color)
                     let addedCategory = try await FetchAPI.shared.addCategory(memberId: memberId, category: newCategory)
                     print("Category added: \(addedCategory)")
                 }
