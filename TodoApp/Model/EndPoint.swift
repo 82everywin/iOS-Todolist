@@ -21,13 +21,12 @@ enum EndPoint {
     case addTodo(memberId: Int, item: AddTodo)
     case updateTodo(todoId: Int, item: Todo)
     case deleteTodo(todoId: Int)
-    case addCategory(memberId: Int, item: CategoryRequest)
+    case addCategory(memberId: Int, item: AddCategory)
     case getCategory(memberId: Int)
-    case updateCategory(categoryId: Int, item: CategoryRequest)
+    case updateCategory(categoryId: Int, item: Category)
     case deleteCategory(categoryId: Int)
-    case member(Id: Int)
-    case signIn (item: SignIn)
-    case signup
+    case signIn(item: SignIn)
+    case signUp(item: Signup)
     
     var url: URL? {
         let baseURL = "http://na2ru2.me:5151"
@@ -46,22 +45,18 @@ enum EndPoint {
             
         case .updateCategory(let categoryId, _), .deleteCategory(let categoryId):
             return URL(string: "\(baseURL)/category/\(categoryId)")
-            
-        case .member(let memberId):
-            return URL(string: "\(baseURL)/member/\(memberId)")
-            
-        case .signup:
+        case .signUp(let signUpData):
             return URL(string: "\(baseURL)/member/sign-up")
-        case .signIn:
+        case .signIn(let signInData):
             return URL(string: "\(baseURL)/member/sign-in")
         }
     }
     
     var method: String {
         switch self {
-        case .addTodo, .addCategory, .signIn, .signup :
+        case .addTodo, .addCategory, .signIn, .signUp :
             return "POST"
-        case .getTodo, .getCategory , .member:
+        case .getTodo, .getCategory :
             return "GET"
         case .updateTodo, .updateCategory :
             return "PUT"
@@ -80,10 +75,13 @@ enum EndPoint {
             return try? JSONEncoder().encode(category)
         case .updateCategory(_, let category):
             return try? JSONEncoder().encode(category)
-        case .signIn(let item)  :
+        case .signIn(let item) :
+            return try? JSONEncoder().encode(item)
+        case .signUp(let item) :
             return try? JSONEncoder().encode(item)
         default :
             return nil
         }
     }
 }
+

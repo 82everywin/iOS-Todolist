@@ -1,34 +1,25 @@
 import UIKit
 
 class MainViewController: UIViewController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.view.backgroundColor = .white
-        
-        setUpviews()
-    }
-    
     // main화면 중앙 사진 랜덤 구현 - 배열과 랜덤한 인덱스 사용
     private var mainImage: UIImageView = {
         let image = UIImageView()
         let imageNames = ["Main1", "Main2", "Main3"]
-        let randomIndex = Int.random(in: 0..<imageNames.count) //index count range
+        let randomIndex = Int.random(in: 0..<imageNames.count)
         let selectedImageName = imageNames[randomIndex] //select image
         image.image = UIImage(named: selectedImageName)
-        image.contentMode = .scaleAspectFit  // 이미지가 올바르게 스케일링 되도록 설정
+        image.contentMode = .scaleAspectFit
         return image
     }()
     
     // todoList 로고 구현 - 배열과 랜덤한 인덱스 사용
     private let logoImage: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "Logo"))
+        let imageView = UIImageView(image: UIImage(named: "LongLogo"))
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
     // 하단에 로그인 버튼 구현
-    //lazy: 뷰컨트롤러가 완전 초기화된 이후 초기화 -> 초기화 코드 안전 작성
     private lazy var loginButton: UIButton = {
         var button = UIButton(type: .custom)
         button.setTitle("로그인", for: .normal)
@@ -37,7 +28,7 @@ class MainViewController: UIViewController {
         button.backgroundColor = UIColor.MainBackground
         button.layer.cornerRadius = 5
         button.clipsToBounds = true
-        button.isEnabled = true // 버튼의 동작 설정 (처음에 동작 on)
+        button.isEnabled = true
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -79,6 +70,12 @@ class MainViewController: UIViewController {
     // + 각 텍스트필드 및 로그인 버튼의 높이 설정
     private let textViewHeight: CGFloat = 27
    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = .white
+        
+        setUpviews()
+    }
        
    func setUpviews() {
        view.addSubview(stackView)

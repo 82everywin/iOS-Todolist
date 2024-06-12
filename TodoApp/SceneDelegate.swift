@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        let todoViewController = TodoViewController(memberId: 5) // 초기 ViewController 설정
+        let todoViewController = MainViewController() // 초기 ViewController 설정
         window?.rootViewController = UINavigationController(rootViewController: todoViewController)
         window?.makeKeyAndVisible()
     }
