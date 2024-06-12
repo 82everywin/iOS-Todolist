@@ -8,32 +8,42 @@
 import Foundation
 import UIKit
 import SnapKit
+import SwiftUI
 
 final class TodoViewCell: UICollectionViewCell {
     
-    private let circleView: UIView = {
-        let view = UIView()
-        view.layer.borderWidth = 1
-        view.layer.cornerRadius = 13
-        view.backgroundColor = .white
-        return view
+    let circleView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(systemName: "checkmark.circle")
+        return imageView
     }()
     
-    private let todoLabel: CustomLabel = {
-        let label = CustomLabel()
+    
+
+//    private let checkCircleView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = .white
+//        view.layer.borderWidth = 1
+//        view.layer.backgroundColor = UIColor.gray.cgColor
+//        view.layer.cornerRadius = 15
+//        view.backgroundColor = .white
+//        return view
+//    }()
+    
+    private let todoLabel: UILabel = {
+        let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = UIColor.labelFontColor
-        label.layer.cornerRadius = 10
-        label.layer.masksToBounds = true
-        label.layer.borderWidth = 1
-        label.textInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.layer.backgroundColor = UIColor(hexCode: "FFFFFF").cgColor
+        //UIColor(hexCode: "F1F1F1").cgColor
         return label
     }()
     
     private let todoContainerView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
+        view.backgroundColor = .white
         return view
     }()
     
@@ -48,16 +58,16 @@ final class TodoViewCell: UICollectionViewCell {
     
     
     func setUpViews() {
-        contentView.addSubview(circleView)
+        addSubview(circleView)
         self.circleView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(8)
+            make.leading.equalToSuperview().offset(2)
             make.centerY.equalToSuperview()
-            make.width.height.equalTo(26)
+            make.width.height.equalTo(35)
         }
         
-        contentView.addSubview(todoContainerView)
+        addSubview(todoContainerView)
         self.todoContainerView.snp.makeConstraints{ make in
-            make.leading.equalTo(circleView.snp.trailing).offset(6)
+            make.leading.equalTo(circleView.snp.trailing).offset(5)
             make.centerY.equalToSuperview()
             make.trailing.equalToSuperview().offset(-10)
             make.height.equalToSuperview()
@@ -65,7 +75,10 @@ final class TodoViewCell: UICollectionViewCell {
         
         todoContainerView.addSubview(todoLabel)
         todoLabel.snp.makeConstraints{ make in
-            make.edges.equalTo(todoContainerView).inset(5)
+            make.leading.equalTo(todoContainerView.snp.leading).offset(10)
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().offset(-10)
+            make.height.equalTo(35)
         }
         
     }
@@ -74,26 +87,5 @@ final class TodoViewCell: UICollectionViewCell {
         todoLabel.text = item.content
         circleView.layer.borderColor = UIColor(hexCode: item.category.color).cgColor
         circleView.backgroundColor = item.checked ? UIColor(hexCode: item.category.color) : .white
-        
-        todoLabel.layer.borderColor = UIColor(hexCode: item.category.color).cgColor
-        
-        let categoryColorHex = item.category.color
-        print(categoryColorHex)
-        switch categoryColorHex {
-        case "F9B0CA":
-            todoLabel.backgroundColor = UIColor.thinPink
-        case "47D2CA" :
-            todoLabel.backgroundColor = UIColor.thinGreen
-        case "FFDC60" :
-            todoLabel.backgroundColor = UIColor.thinYellow
-        case "B6B0F9" :
-            todoLabel.backgroundColor = UIColor.thinPurple
-        default:
-            todoLabel.backgroundColor = UIColor.white
         }
-        
-//        print("color \(UIColor(hexCode: item.category.color) ) &&&&& \(todoLabel.backgroundColor)")
-//        todoLabel.backgroundColor = UIColor.white
-    }
 }
-

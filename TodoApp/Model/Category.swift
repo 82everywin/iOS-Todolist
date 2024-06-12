@@ -8,19 +8,13 @@
 import Foundation
 
 
-struct CategoryResponse : Codable{
+struct Category : Codable{
     var categoryId: Int
     var content: String
     var color: String
 }
 
-struct CategoryRequest: Codable{
+struct AddCategory: Codable{
     var content: String
     var color: String
 }
-
-struct Category: Codable{
-    var content: String
-    var color: String
-}
-
