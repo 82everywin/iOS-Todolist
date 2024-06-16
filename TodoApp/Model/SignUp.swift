@@ -15,7 +15,7 @@ struct SignupResponse: Codable {
 }
 
 // MARK: - SingupData
-struct SignupData: Codable{
+struct Signup: Codable{
     let userId: String
     let userPw: String
     let confirmUserPw: String

@@ -8,15 +8,16 @@
 import Foundation
 import UIKit
 
-
-class CategoryViewCell: UICollectionViewCell {
+final class CategoryViewCell: UICollectionViewCell {
     
+    var selectedCategory: CategoryResponse?
     
-    let label: UILabel = {
+    private let label: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.layer.cornerRadius = 30
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.textColor = UIColor.fontColor
+        label.layer.cornerRadius = 15
         return label
     }()
         
@@ -29,9 +30,9 @@ class CategoryViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setupViews() {
+    private func setupViews() {
         contentView.addSubview(label)
-        contentView.layer.cornerRadius = 10
+        contentView.layer.cornerRadius = contentView.frame.height / 2
         contentView.layer.masksToBounds = true
         contentView.layer.borderWidth = 1
         
@@ -39,9 +40,15 @@ class CategoryViewCell: UICollectionViewCell {
             make.edges.equalToSuperview()
         }
     }
+    
+    override func layoutSubviews() {
+           super.layoutSubviews()
+           contentView.layer.cornerRadius = contentView.frame.height / 2
+    }
         
     func configure(with category: CategoryResponse) {
         label.text = category.content
+        contentView.layer.backgroundColor = UIColor(hexCode: category.color).cgColor
         contentView.layer.borderColor = UIColor(hexCode: category.color).cgColor
         
         let categoryColorHex = category.color
@@ -50,7 +57,7 @@ class CategoryViewCell: UICollectionViewCell {
             contentView.layer.backgroundColor = UIColor.thinPink.cgColor
         case "47D2CA" :
             contentView.layer.backgroundColor = UIColor.thinGreen.cgColor
-        case "FFDC60" :
+        case "FFE560" :
             contentView.layer.backgroundColor = UIColor.thinYellow.cgColor
         case "B6B0F9" :
             contentView.layer.backgroundColor = UIColor.thinPurple.cgColor
@@ -58,4 +65,11 @@ class CategoryViewCell: UICollectionViewCell {
             contentView.layer.backgroundColor = UIColor.white.cgColor
         }
     }
+    
+    func choice(with category: CategoryResponse){
+        label.text = category.content
+        contentView.layer.backgroundColor = UIColor.white.cgColor
+        contentView.layer.borderColor = UIColor(hexCode: "D0D0D0").cgColor
+    }
+        
 }

@@ -3,13 +3,13 @@
 //  Todo_list
 //
 //  Created by 이예나 on 5/28/24.
-//ㄴ
+//
 import UIKit
 import SnapKit
 
 class SignupViewController: UIViewController, UITextFieldDelegate {
-    
-   private lazy var idLabel: UILabel = {
+    // 라벨
+    private lazy var idLabel: UILabel = {
         let label = UILabel()
         label.text = "아이디"
         return label
@@ -27,130 +27,87 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
+    // 텍스트 필드
     private lazy var idTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = UIColor.grayBackgroud
         textField.placeholder = " 아이디를 입력해주세요"
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.borderStyle = .none
+        textField.layer.cornerRadius = 10
         textField.autocapitalizationType = .none
         textField.keyboardType = .default
         textField.returnKeyType = .next
         textField.clearButtonMode = .whileEditing
-        textField.translatesAutoresizingMaskIntoConstraints = false
         textField.delegate = self
         
-        textField.addTarget(self, action: #selector(textFieldDidBeginEditing(_:)), for: .editingDidBegin)
-        textField.addTarget(self, action: #selector(textFieldDidEndEditing(_:)), for: .editingDidEnd)
+        textField.addTarget(self, action: #selector(textFieldBlue(_:)), for: .editingDidBegin)
+        textField.addTarget(self, action: #selector(textFieldBasic(_:)), for: .editingDidEnd)
         
-        
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
-        let imageView = UIImageView(image: UIImage(named: "user"))
-        imageView.contentMode = .scaleAspectFit
-        imageView.frame = CGRect(x: 10, y: 0, width: 20, height: 20)
-        paddingView.addSubview(imageView)
-                    
-        textField.leftView = paddingView
-        textField.leftViewMode = .always
-        
+        addLeftPadding(to: textField, image: UIImage(named: "user")!, paddingWidth: 30, paddingHeight: 20)
+
         return textField
     }()
     
-    
     private lazy var pwTextField: UITextField = {
-        let textField = UITextField() //정의
+        let textField = UITextField()
         textField.backgroundColor = UIColor.grayBackgroud
         textField.placeholder =  " 비밀번호를 입력해주세요"
-        textField.font = UIFont.systemFont(ofSize: 14) // 글자 크기
-        textField.borderStyle = .none // 테두리 없음
+        textField.font = UIFont.systemFont(ofSize: 14)
+        textField.borderStyle = .none
+        textField.layer.cornerRadius = 10
         textField.autocapitalizationType = .none
         textField.keyboardType = .default
         textField.returnKeyType = .next
         textField.clearButtonMode = .whileEditing
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.isSecureTextEntry = true // 초기에는 암호화 처리
-
+        textField.isSecureTextEntry = true
         textField.delegate = self
         
-        textField.addTarget(self, action: #selector(textFieldDidBeginEditing(_:)), for: .editingDidBegin)
-        textField.addTarget(self, action: #selector(textFieldDidEndEditing(_:)), for: .editingDidEnd)
-    
-        // 따로
-        let leftpaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
-        let lockImage = UIImageView(image: UIImage(named: "Lock"))
-        lockImage.contentMode = .scaleAspectFit
-        lockImage.frame = CGRect(x: 10, y: 0, width: 20, height: 20)
-        leftpaddingView.addSubview(lockImage)
-                    
-        textField.leftView = leftpaddingView
-        textField.leftViewMode = .always
+        textField.addTarget(self, action: #selector(textFieldBlue(_:)), for: .editingDidBegin)
+        textField.addTarget(self, action: #selector(textFieldBasic(_:)), for: .editingDidEnd)
         
-        let rightpaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
-        let eyeImage = UIImageView(image: UIImage(named: "Eye"))
-        eyeImage.contentMode = .scaleAspectFit
-        eyeImage.frame = CGRect(x: -10, y: 0, width: 20, height: 20)
-        eyeImage.isUserInteractionEnabled = true // 이미지에 터치 이벤트 허용
-        eyeImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(togglePasswordVisibility(_:))))
-
-        rightpaddingView.addSubview(eyeImage)
-                    
-        textField.rightView = rightpaddingView
-        textField.rightViewMode = .always
+        addLeftPadding(to: textField, image: UIImage(named: "Lock")!, paddingWidth: 30, paddingHeight: 20)
+        addRightPadding(to: textField, image: UIImage(named: "Eye-closed")!, paddingWidth: 30, paddingHeight: 20, selector: #selector(togglePasswordVisibility(_:)))
         
         return textField
     }()
     
     private lazy var checkpwTextField: UITextField = {
-        let textField = UITextField() //정의
+        let textField = UITextField()
         textField.backgroundColor = UIColor.grayBackgroud
         textField.placeholder = " 비밀번호를 입력해주세요"
-        textField.font = UIFont.systemFont(ofSize: 14) // 글자 크기
-        textField.borderStyle = .none // 테두리 없음
+        textField.font = UIFont.systemFont(ofSize: 14)
+        textField.borderStyle = .none
+        textField.layer.cornerRadius = 10
         textField.autocapitalizationType = .none
         textField.keyboardType = .default
         textField.returnKeyType = .next
         textField.clearButtonMode = .whileEditing
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.isSecureTextEntry = true // 초기에는 암호화 처리
-
+        textField.isSecureTextEntry = true
         textField.delegate = self
         
-        textField.addTarget(self, action: #selector(textFieldDidBeginEditing(_:)), for: .editingDidBegin)
-        textField.addTarget(self, action: #selector(textFieldDidEndEditing(_:)), for: .editingDidEnd)
+        textField.addTarget(self, action: #selector(textFieldBlue(_:)), for: .editingDidBegin)
+        if (pwLabel != checkPwLabel) { textField.addTarget(self, action: #selector(textFieldBlue(_:)), for: .editingDidBegin)}
+        textField.addTarget(self, action: #selector(textFieldBasic(_:)), for: .editingDidEnd)
         
-        let leftpaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
-        let lockImage = UIImageView(image: UIImage(named: "Lock"))
-        lockImage.contentMode = .scaleAspectFit
-        lockImage.frame = CGRect(x: 10, y: 0, width: 20, height: 20)
-        leftpaddingView.addSubview(lockImage)
-                    
-        textField.leftView = leftpaddingView
-        textField.leftViewMode = .always
         
-        let rightpaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 20))
-        let eyeImage = UIImageView(image: UIImage(named: "Eye"))
-        eyeImage.contentMode = .scaleAspectFit
-        eyeImage.frame = CGRect(x: -10, y: 0, width: 20, height: 20)
-        eyeImage.isUserInteractionEnabled = true // 이미지에 터치 이벤트 허용
-        eyeImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(togglePasswordVisibility(_:))))
-
-        rightpaddingView.addSubview(eyeImage)
-                    
-        textField.rightView = rightpaddingView
-        textField.rightViewMode = .always
+        addLeftPadding(to: textField, image: UIImage(named: "Lock")!, paddingWidth: 30, paddingHeight: 20)
+        addRightPadding(to: textField, image: UIImage(named: "Eye-closed")!, paddingWidth: 30, paddingHeight: 20, selector: #selector(togglePasswordVisibility(_:)))
+        
         
         return textField
     }()
     
-    private lazy var loginButton: UIButton = {
+    // 회원가입 버튼
+    private lazy var signUpButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setTitle(NSLocalizedString("회원가입", comment: ""), for: .normal) //로그인 버튼 이름
+        button.setTitle("회원가입", for: .normal )
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor.MainBackground
         button.layer.cornerRadius = 5
         button.clipsToBounds = true
-        button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(signupButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isEnabled = false
         return button
@@ -160,35 +117,21 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "회원가입"
-     
         self.view.backgroundColor = .white
         
         setupViews()
-        updateLoginButtonState()
+        updateSignupButtonState()
     }
     
-    
-    @objc func togglePasswordVisibility(_ sender: UITapGestureRecognizer) {
-        pwTextField.isSecureTextEntry.toggle()
-    }
-    @objc func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.backgroundColor = UIColor(hexCode: "F2F4FF")
-        textField.layer.borderColor = UIColor.MainBackground.cgColor
-        textField.layer.borderWidth = 1.0
-    }
-
-    @objc func textFieldDidEndEditing(_ textField: UITextField) {
-        textField.backgroundColor = UIColor(hexCode: "F5F5F5")
-        textField.layer.borderColor = UIColor.clear.cgColor
-        textField.layer.borderWidth = 0.0
-    }
-
+    // 오토레이아웃 설정
     private func setupViews() {
         self.view.addSubview(idLabel)
         self.view.addSubview(idTextField)
         self.view.addSubview(pwLabel)
         self.view.addSubview(pwTextField)
-        self.view.addSubview(loginButton)
+        self.view.addSubview(checkPwLabel)
+        self.view.addSubview(checkpwTextField)
+        self.view.addSubview(signUpButton)
         
         
         idLabel.snp.makeConstraints { make in
@@ -212,49 +155,133 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
             make.top.equalTo(pwLabel.snp.bottom).offset(8)
             make.leading.equalTo(pwLabel)
             make.trailing.equalTo(idTextField)
-            make.height.equalTo(40)
+            make.height.equalTo(50)
         }
         
-        loginButton.snp.makeConstraints { make in
+        checkPwLabel.snp.makeConstraints { make in
             make.top.equalTo(pwTextField.snp.bottom).offset(20)
+            make.leading.equalTo(pwLabel)
+        }
+        
+        checkpwTextField.snp.makeConstraints { make in
+            make.top.equalTo(checkPwLabel.snp.bottom).offset(8)
+            make.leading.equalTo(checkPwLabel)
+            make.trailing.equalTo(pwTextField)
+            make.height.equalTo(50)
+        }
+        
+        signUpButton.snp.makeConstraints { make in
+            make.top.equalTo(checkpwTextField.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(30)
             make.trailing.equalToSuperview().offset(-30)
             make.height.equalTo(50)
         }
     }
     
-    @objc private func loginButtonTapped() {
-        // Implement your login logic here
-        print("로그인 버튼 탭됨")
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == idTextField {
-            pwTextField.becomeFirstResponder()
-        } else if textField == pwTextField {
-            textField.resignFirstResponder()
-        }
-        return true
-    }
-    
     // 모든 필드가 채워져 있는지 확인하는 함수
-        private func areFieldsFilled() -> Bool {
-            return !(idTextField.text?.isEmpty ?? true) && !(pwTextField.text?.isEmpty ?? true)
+    private func areFieldsFilled() -> Bool {
+        return !(idTextField.text?.isEmpty ?? true) && !(pwTextField.text?.isEmpty ?? true)
+    }
+    
+    // 회원가입 버튼의 상태를 업데이트하는 함수
+    private func updateSignupButtonState() {
+        if !areFieldsFilled() {
+            signUpButton.backgroundColor = UIColor.MainBackground
+            signUpButton.isEnabled = true
+        } else {
+            signUpButton.backgroundColor = UIColor(hexCode: "C1C1C1")
+            signUpButton.isEnabled = false
         }
+    }
+    
+    // 텍스트 필드의 편집이 변경될 때마다 회원가입 버튼 상태를 업데이트
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        updateSignupButtonState()
+    }
+
+    // 텍스트 필드의 내부 이미지 패딩
+    func addLeftPadding(to textField: UITextField, image: UIImage, paddingWidth: CGFloat, paddingHeight: CGFloat) {
+        let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: paddingWidth, height: paddingHeight))
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        imageView.frame = CGRect(x: 10, y: 0, width: paddingWidth - 10, height: paddingHeight)
+        leftPaddingView.addSubview(imageView)
         
-        // 로그인 버튼의 상태를 업데이트하는 함수
-        private func updateLoginButtonState() {
-            if areFieldsFilled() {
-                loginButton.backgroundColor = UIColor(hexCode: "4260FF")
-                loginButton.isEnabled = true
-            } else {
-                loginButton.backgroundColor = UIColor(hexCode: "C1C1C1")
-                loginButton.isEnabled = false
+        textField.leftView = leftPaddingView
+        textField.leftViewMode = .always
+    }
+    
+    // 텍스트 필드의 내부이미지 패딩
+    func addRightPadding(to textField: UITextField, image: UIImage, paddingWidth: CGFloat, paddingHeight: CGFloat, selector: Selector) {
+        let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: paddingWidth, height: paddingHeight))
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        imageView.frame = CGRect(x: -10, y: 0, width: paddingWidth - 10, height: paddingHeight)
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: selector))
+        
+        rightPaddingView.addSubview(imageView)
+        textField.rightView = rightPaddingView
+        textField.rightViewMode = .always
+    }
+
+    // 비밀번호 암호화 처리
+    @objc func togglePasswordVisibility(_ sender: UITapGestureRecognizer) {
+        pwTextField.isSecureTextEntry.toggle()
+        checkpwTextField.isSecureTextEntry.toggle()
+    }
+    
+    // 텍스트 필드 파란 형태
+    @objc func textFieldBlue(_ textField: UITextField) {
+        textField.backgroundColor = UIColor(hexCode: "#F2F4FF")
+        textField.layer.borderColor = UIColor.MainBackground.cgColor
+        textField.layer.borderWidth = 1.0
+        }
+
+    // 텍스트 필드 빨간 형태
+    @objc func textFieldRed(_ textField: UITextField) {
+        textField.backgroundColor = UIColor(hexCode: "#FFF6F6")
+        textField.layer.borderColor = UIColor(hexCode: "#FF2121").cgColor
+        textField.layer.borderWidth = 1.0
+    }
+    
+    // 텍스트 필드 기본 형태
+    @objc func textFieldBasic(_ textField: UITextField) {
+        textField.backgroundColor = UIColor.grayBackgroud
+        textField.layer.borderColor = UIColor.clear.cgColor
+        textField.layer.borderWidth = 0.0
+    }
+    // 회원가입 버튼 눌렀을 때 동작 구현
+    @objc private func signupButtonTapped() {
+        guard let setUserId = idTextField.text,
+              let setUserPw = pwTextField.text,
+              let setCheckPw = checkpwTextField.text
+
+        else {
+            let alert = UIAlertController(title: "Error", message: "양식을 채워주세요", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+            return
+        }
+
+    
+        Task {
+            do {
+                let newSignup = Signup(userId: setUserId, userPw: setUserPw, confirmUserPw: setCheckPw)
+                
+                let signUpData = try await FetchAPI.shared.signUp(data: newSignup)
+                print("Signup: \(signUpData)")
+                
+                let loginVC = SignInViewController()
+                navigationController?.pushViewController(loginVC, animated: true)
+            } catch {
+                let alert = UIAlertController(title: "Error", message: "회원가입에 실패하였습니다.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                present(alert, animated: true, completion: nil)
+                print("Faild to SignUp: \(error)")
             }
         }
-        
-    // 텍스트 필드의 편집이 변경될 때마다 로그인 버튼 상태를 업데이트
-        func textFieldDidChangeSelection(_ textField: UITextField) {
-            updateLoginButtonState()
-        }
+    }
+    
+   
 }

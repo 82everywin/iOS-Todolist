@@ -44,36 +44,13 @@ class FetchAPI {
         default :
             throw FetchError.statuscodeError(httpResponse.statusCode)
         }
-        
+
     }
     
-    func addTodo(memberId: Int, todo: AddTodo) async throws -> AddTodo {
-        try await fetchAPI(.addTodo(memberId: memberId, item: todo))
-    }
-    func getTodo(memberId: Int) async throws -> [TodoResponse] {
-        try await fetchAPI(.getTodo(memberId: memberId))
-    }
-    func updateTodo(todoId: Int, todo: TodoRequest) async throws -> TodoResponse{
-        try await fetchAPI(.updateTodo(todoId: todoId, item: todo))
-    }
-    func deleteTodo(todoId: Int) async throws -> Msg{
-        try await fetchAPI(.deleteTodo(todoId: todoId))
-    }
-    
-    func addCategory(memberId: Int, category: CategoryRequest) async throws -> CategoryResponse {
-        try await fetchAPI(.addCategory(memberId: memberId, item: category))
-    }
-    func getCategory(memberId: Int) async throws -> [CategoryResponse] {
-        try await fetchAPI(.getCategory(memberId: memberId))
-    }
-    func updateCategory(categoryId: Int, category: CategoryRequest) async throws -> CategoryResponse {
-        try await fetchAPI(.updateCategory(categoryId: categoryId, item: category))
-    }
-    func deleteCategory(categoryId: Int) async throws -> Msg {
-        try await fetchAPI(.deleteCategory(categoryId: categoryId))
-    }
-    func signIn(data: SignIn) async throws -> LoginResponse {
+    func signIn(data: SignIn) async throws -> SignInResponse {
         try await fetchAPI(.signIn(item: data))
     }
-    
+    func signUp(data: Signup) async throws -> SignupResponse {
+        try await fetchAPI(.signUp(item: data))
+    }
 }

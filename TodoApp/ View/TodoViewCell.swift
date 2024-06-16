@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SnapKit
+import SwiftUI
 
 final class TodoViewCell: UICollectionViewCell {
     
@@ -31,11 +32,11 @@ final class TodoViewCell: UICollectionViewCell {
     private let todoLabel: CustomLabel = {
         let label = CustomLabel()
         label.textAlignment = .left
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = UIColor.labelFontColor
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = UIColor.fontColor
         label.layer.cornerRadius = 10
-        label.layer.masksToBounds = true
         label.layer.borderWidth = 1
+        label.layer.masksToBounds = true
         label.textInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
         return label
     }()
@@ -43,6 +44,7 @@ final class TodoViewCell: UICollectionViewCell {
     private let todoContainerView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
+        view.backgroundColor = .white
         return view
     }()
     
@@ -100,7 +102,7 @@ final class TodoViewCell: UICollectionViewCell {
             todoLabel.backgroundColor = UIColor.thinPink
         case "47D2CA" :
             todoLabel.backgroundColor = UIColor.thinGreen
-        case "FFDC60" :
+        case "FFE560" :
             todoLabel.backgroundColor = UIColor.thinYellow
         case "B6B0F9" :
             todoLabel.backgroundColor = UIColor.thinPurple
@@ -116,9 +118,10 @@ final class TodoViewCell: UICollectionViewCell {
     
         Task{
             do {
-                let category = CategoryRequest(content: todo.category.content, color: todo.category.color)
-                let updateTodo = TodoRequest(content: todo.content, checked: newCheckedState, setDate: todo.setDate, category: category)
-                let checkedCircle = try await FetchAPI.shared.updateTodo(todoId: self.todo!.todoId, todo: updateTodo)
+                let category = CategoryRequest(content: todo.category.content,
+                                               color: todo.category.color)
+                let updateTodo = UpdateTodoRequest(content: todo.content, checked: newCheckedState, setDate: todo.setDate, category: category)
+                let checkedCircle = try await TokenAPI.shared.updateTodo(todoId: self.todo!.todoId, todo: updateTodo)
                 print("Todo update : \(checkedCircle)")
                 
                 self.todo?.checked = newCheckedState
@@ -145,33 +148,4 @@ final class TodoViewCell: UICollectionViewCell {
     }
 }
 
-//
-//guard let content = categoryName.text, !content.isEmpty,
-//      let color = selectedColor  else {
-//    let alert = UIAlertController(title: "Error", message: "양식을 채워주세요", preferredStyle: .alert)
-//    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//    present(alert, animated: true, completion: nil)
-//    return}
-//
-//Task {
-//    do {
-//        if selectedCategory != nil {
-//            let newCategory = CategoryRequest(content: content, color: color)
-//            let updatedCategory = try await FetchAPI.shared.updateCategory(categoryId: categoryId!, category: newCategory)
-//            print("Category update :\(updatedCategory)")
-//        }
-//        else {
-//            let newCategory = CategoryRequest(content: content, color: color)
-//            let addedCategory = try await FetchAPI.shared.addCategory(memberId: memberId, category: newCategory)
-//            print("Category added: \(addedCategory)")
-//        }
-//        
-//        navigationController?.popViewController(animated: true)
-//        
-//    }catch {
-//        let alert = UIAlertController(title: "Error", message: "Failed to add category", preferredStyle: .alert)
-//        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//        present(alert, animated: true, completion: nil)
-//        print("Failed to add category: \(error)")
-//    }
-//}
+

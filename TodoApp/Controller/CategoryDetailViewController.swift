@@ -8,16 +8,12 @@
 import UIKit
 import SnapKit
 
-
 final class CategoryDetailViewController: UIViewController {
     
-    private var memberId: Int
-    private var categoryId: Int?
-    private var previousSeletedButton: UIButton?
-    var selectedCategory: CategoryResponse?
+    var accToken: String
     
-    init(memberId: Int){
-        self.memberId = memberId
+    init(accToken: String){
+        self.accToken = accToken
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -25,43 +21,56 @@ final class CategoryDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    var categoryId: Int?
+    private var previousSeletedButton: UIButton?
+    var selectedCategory: CategoryResponse?
+    
     private lazy var categoryNameView: UIView = {
+            let view = UIView()
+            view.layer.shadowColor = UIColor.black.cgColor
+            view.layer.shadowOpacity = 0.3
+            view.layer.shadowRadius = 3
+            view.layer.shadowOffset = CGSize(width: 2, height: 8)
+            view.layer.masksToBounds = false
+            return view
+    }()
+    
+    private lazy var categoryContentView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.grayBackgroud.cgColor
-        view.layer.shadowColor = UIColor(hexCode: "EAEAEA").cgColor
-        view.layer.shadowOpacity = 0.3
-        view.layer.shadowRadius = 3
-        view.layer.shadowOffset = CGSize(width: 2, height: 8)
-        view.layer.masksToBounds = false
+        view.layer.borderColor = UIColor.lineColor.cgColor
         return view
     }()
-    
-    private lazy var categoryContentView = UIView()
-    
-    private lazy var selectedColorMini: UILabel = {
-        let label = UILabel()
-        label.backgroundColor = UIColor.white
-        label.layer.cornerRadius = 13
-        label.clipsToBounds = true //뷰의 하위 뷰가 부모 뷰의 경계를 넘어서 그려지는 것을 제어 (true => 잘림)
-        return label
+
+   private lazy var selectedColorMini: UILabel = {
+       let label = UILabel()
+       label.backgroundColor = UIColor.white
+       label.layer.cornerRadius = 13
+       label.layer.masksToBounds = true //뷰의 하위 뷰가 부모 뷰의 경계를 넘어서 그려지는 것을 제어 (true => 잘림)
+       return label
     }()
     
-    private lazy var categoryName: UITextField = {
+    private let categoryName: UITextField = {
         let field = UITextField()
         field.placeholder = "추가할 카테고리를 입력해주세요!"
         field.font = UIFont.systemFont(ofSize: 16)
+        field.textColor = UIColor(hexCode: "232323")
         field.layer.borderColor = UIColor.clear.cgColor
-        return field
+        field.layer.masksToBounds = true
         
+        field.attributedPlaceholder = NSAttributedString(string: "추가할 카테고리를 입력해주세요!", attributes: [NSAttributedString.Key.foregroundColor: UIColor(hexCode: "D0D0D0")])
+      
+        return field
     }()
     
     private let colorLabel: UILabel = {
         let label = UILabel()
         label.text = "Color"
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 22)
+        label.font = UIFont.systemFont(ofSize: 20)
+        label.textColor = UIColor(hexCode: "232323")
+        label.layer.masksToBounds = true
         return label
     }()
     
@@ -69,17 +78,16 @@ final class CategoryDetailViewController: UIViewController {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor(hexCode: "EAEAEA").cgColor
-        view.layer.shadowColor = UIColor(hexCode: "EAEAEA").cgColor
-        view.layer.masksToBounds = false
+        view.layer.borderColor = UIColor.lineColor.cgColor
+        view.layer.shadowColor = UIColor.lineColor.cgColor
+        view.layer.masksToBounds = true
         view.layer.shadowOffset = CGSize(width: 2, height: 5)
         view.layer.shadowOpacity = 0.3
         view.layer.shadowRadius = 3
         return view
     }()
     
-    let colors: [String] = ["FFDC60", "47D2CA", "F9B0CA", "B6B0F9"]
-    
+    let colors: [String] = ["FFE560", "47D2CA", "F9B0CA", "B6B0F9"]
     private var selectedColor: String?
     
     private lazy var addButton: UIButton = {
@@ -120,23 +128,31 @@ final class CategoryDetailViewController: UIViewController {
     }
     
     private func setUpViews() {
-        
+      
         self.view.addSubview(categoryNameView)
-        categoryNameView.snp.makeConstraints{ make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(30)
+        self.categoryNameView.snp.makeConstraints{ make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(40)
             make.leading.equalTo(view).offset(14)
             make.trailing.equalTo(view).offset(-14)
             make.height.equalTo(53)
         }
         
-        categoryNameView.addSubview(selectedColorMini)
+        self.view.addSubview(categoryContentView)
+        self.categoryContentView.snp.makeConstraints{ make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(40)
+            make.leading.equalTo(view).offset(14)
+            make.trailing.equalTo(view).offset(-14)
+            make.height.equalTo(53)
+        }
+        
+        categoryContentView.addSubview(selectedColorMini)
         selectedColorMini.snp.makeConstraints{ make in
             make.centerY.equalTo(categoryNameView)
             make.leading.equalTo(categoryNameView.snp.leading).offset(6)
             make.width.height.equalTo(26)
         }
-        
-        categoryNameView.addSubview(categoryName)
+
+        categoryContentView.addSubview(categoryName)
         categoryName.snp.makeConstraints{ make in
             make.leading.equalTo(selectedColorMini.snp.trailing).offset(7)
             make.trailing.equalTo(categoryNameView.snp.trailing).offset(-2)
@@ -146,12 +162,11 @@ final class CategoryDetailViewController: UIViewController {
         self.categoryName.becomeFirstResponder()
         self.categoryName.delegate = self
         
-        
         self.view.addSubview(colorSelectionView)
-        colorSelectionView.snp.makeConstraints{ make in
+        self.colorSelectionView.snp.makeConstraints{ make in
             make.top.equalTo(categoryNameView.snp.bottom).offset(50)
-            make.leading.equalTo(view).offset(15)
-            make.trailing.equalTo(view).offset(-15)
+            make.leading.equalTo(view).offset(14)
+            make.trailing.equalTo(view).offset(-14)
             make.height.equalTo(190)
         }
         
@@ -160,6 +175,16 @@ final class CategoryDetailViewController: UIViewController {
             make.top.equalTo(colorSelectionView.snp.top).offset(20)
             make.centerX.equalToSuperview()
         }
+        
+        view.addSubview(addButton)
+           addButton.snp.makeConstraints { make in
+               make.height.equalTo(50)
+           }
+
+       view.addSubview(deleteButton)
+       deleteButton.snp.makeConstraints { make in
+           make.height.equalTo(50)
+       }
     }
     
     private func setupColorButtons() {
@@ -182,63 +207,61 @@ final class CategoryDetailViewController: UIViewController {
     }
     
     private func didSelectCategory() {
-        if let selected = selectedCategory {
-            categoryId = selected.categoryId
-            categoryName.text = selected.content
-            selectedColor = selected.color
-            for subview in colorSelectionView.subviews {
-                if let button = subview as? UIButton, button.backgroundColor == UIColor(hexCode: selected.color) {
-                    button.setImage(UIImage(named: "Check_Big"), for: .normal)
-                    selectedColorMini.backgroundColor = UIColor(hexCode: selected.color)
-                }
-            }
-            
-            self.view.addSubview(deleteButton)
-            self.deleteButton.snp.makeConstraints{ make in
-                make.top.equalTo(colorSelectionView.snp.bottom).offset(60)
-                make.leading.equalTo(view).offset(15)
-                make.width.equalTo(view.frame.width / 2 - 20)
-                make.height.equalTo(50)
-            }
-            
-           
-            addButton.setTitle("저장", for: .normal)
-            self.view.addSubview(addButton)
-            self.addButton.snp.makeConstraints{ make in
-                make.top.equalTo(colorSelectionView.snp.bottom).offset(60)
-                make.width.equalTo(deleteButton.snp.width)
-                make.trailing.equalTo(view).offset(-15)
-                make.height.equalTo(50)
+           if let selected = selectedCategory {
+               categoryId = selected.categoryId
+               categoryName.text = selected.content
+               selectedColor = selected.color
+               for subview in colorSelectionView.subviews {
+                   if let button = subview as? UIButton, button.backgroundColor == UIColor(hexCode: selected.color) {
+                       button.setImage(UIImage(named: "Check_Big"), for: .normal)
+                       selectedColorMini.backgroundColor = UIColor(hexCode: selected.color)
+                   }
+               }
 
-            }
-      
-        }
-        else {
-            self.view.addSubview(addButton)
-            self.addButton.snp.makeConstraints{ make in
-                make.top.equalTo(colorSelectionView.snp.bottom).offset(60)
-                make.leading.equalTo(view).offset(15)
-                make.trailing.equalTo(view).offset(-15)
-                make.height.equalTo(50)
-                make.centerX.equalTo(view)
-            }
-        }
+           deleteButton.isHidden = false
+                 addButton.setTitle("저장", for: .normal)
+                 
+                 deleteButton.snp.remakeConstraints { make in
+                     make.top.equalTo(colorSelectionView.snp.bottom).offset(60)
+                     make.leading.equalTo(view).offset(15)
+                     make.width.equalTo(view.frame.width / 2 - 20)
+                     make.height.equalTo(50)
+                 }
+                 
+                 addButton.snp.remakeConstraints { make in
+                     make.top.equalTo(colorSelectionView.snp.bottom).offset(60)
+                     make.trailing.equalTo(view).offset(-15)
+                     make.width.equalTo(view.frame.width / 2 - 20)
+                     make.height.equalTo(50)
+                 }
+                 
+             } else {
+                 deleteButton.isHidden = true
+                 addButton.setTitle("저장하기", for: .normal)
+                 
+                 addButton.snp.remakeConstraints { make in
+                     make.top.equalTo(colorSelectionView.snp.bottom).offset(60)
+                     make.leading.equalTo(view).offset(15)
+                     make.trailing.equalTo(view).offset(-15)
+                     make.height.equalTo(50)
+                 }
+             }
     }
     
     @objc func colorButtonTapped(_ sender: UIButton ) {
-        for subview in colorSelectionView.subviews {
-            if let button = subview as? UIButton {
-                button.setImage(nil, for: .normal)
-            }
-        }
-        if let previousButton = previousSeletedButton {
-            previousButton.setImage(nil, for: .normal)
-        }
-        sender.setImage(UIImage(named: "Check_Big"), for: .normal)
-        selectedColor = colors[sender.tag]
-        selectedColorMini.backgroundColor = UIColor(hexCode: selectedColor!)
-        
-        previousSeletedButton = sender
+           for subview in colorSelectionView.subviews {
+               if let button = subview as? UIButton {
+                   button.setImage(nil, for: .normal)
+               }
+           }
+           if let previousButton = previousSeletedButton {
+               previousButton.setImage(nil, for: .normal)
+           }
+           sender.setImage(UIImage(named: "Check_Big"), for: .normal)
+           selectedColor = colors[sender.tag]
+           selectedColorMini.backgroundColor = UIColor(hexCode: selectedColor!)
+
+           previousSeletedButton = sender
     }
     
     @objc func saveCategory() {
@@ -253,12 +276,12 @@ final class CategoryDetailViewController: UIViewController {
             do {
                 if selectedCategory != nil {
                     let newCategory = CategoryRequest(content: content, color: color)
-                    let updatedCategory = try await FetchAPI.shared.updateCategory(categoryId: categoryId!, category: newCategory)
+                    let updatedCategory = try await TokenAPI.shared.updateCategory(categoryId: categoryId!, category: newCategory)
                     print("Category update :\(updatedCategory)")
                 }
                 else {
                     let newCategory = CategoryRequest(content: content, color: color)
-                    let addedCategory = try await FetchAPI.shared.addCategory(memberId: memberId, category: newCategory)
+                    let addedCategory = try await TokenAPI.shared.addCategory(category: newCategory)
                     print("Category added: \(addedCategory)")
                 }
                 
@@ -279,7 +302,7 @@ final class CategoryDetailViewController: UIViewController {
         Task {
             do {
                 if selectedCategory != nil {
-                    let deletedCategory = try await FetchAPI.shared.deleteCategory(categoryId: categoryId!)
+                    let deletedCategory = try await TokenAPI.shared.deleteCategory(categoryId: categoryId!)
                     print("Category update :\(deletedCategory)")
                 }
                 

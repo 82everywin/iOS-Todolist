@@ -7,8 +7,7 @@
 
 import Foundation
 
-
-struct CategoryResponse : Codable{
+struct CategoryResponse: Codable{
     var categoryId: Int
     var content: String
     var color: String
@@ -19,8 +18,15 @@ struct CategoryRequest: Codable{
     var color: String
 }
 
-struct Category: Codable{
+struct CategoryTodoRequest: Codable{
+    var categoryId: Int
     var content: String
     var color: String
 }
 
+
+//"category": {
+//    "categoryId": 1,
+//    "content": "약속",
+//    "color": "FFFFFF"
+//  }

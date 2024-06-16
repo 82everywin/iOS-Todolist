@@ -17,51 +17,59 @@ enum FetchError: Error {
 }
 
 enum EndPoint {
-    case getTodo(memberId: Int)
-    case addTodo(memberId: Int, item: AddTodo)
-    case updateTodo(todoId: Int, item: TodoRequest)
+    case getTodo
+    case addTodo( item: TodoRequest)
+    case updateTodo(todoId: Int, item: UpdateTodoRequest)
     case deleteTodo(todoId: Int)
-    case addCategory(memberId: Int, item: CategoryRequest)
-    case getCategory(memberId: Int)
+    case addCategory(item: CategoryRequest)
+    case getCategory
     case updateCategory(categoryId: Int, item: CategoryRequest)
     case deleteCategory(categoryId: Int)
-    case member(Id: Int)
-    case signIn (item: SignIn)
-    case signup
+    case signIn(item: SignIn)
+    case signUp(item: Signup)
+    
+    var path: String {
+      
+        switch self{
+            
+        case .addTodo(_):
+            return "/todo"
+            
+        case .getTodo:
+            return "/todo/todos"
+            
+        case .updateTodo(let todoId, _), 
+                .deleteTodo(let todoId):
+            return "/todo/\(todoId)"
+            
+        case .getCategory:
+            return "/category/categories"
+            
+        case .addCategory(_):
+            return "/category"
+            
+        case .updateCategory(let categoryId, _),
+                .deleteCategory(let categoryId):
+            return "/category/\(categoryId)"
+            
+        case .signUp(_):
+            return "/member/sign-up"
+            
+        case .signIn(_):
+            return "/member/sign-in"
+        }
+    }
     
     var url: URL? {
         let baseURL = "http://na2ru2.me:5151"
-        switch self{
-        case .getTodo(let memberId), .addTodo(let memberId, _):
-            return URL(string: "\(baseURL)/todo/\(memberId)")
-            
-        case .updateTodo(let todoId, _), .deleteTodo(let todoId):
-            return URL(string: "\(baseURL)/todo/\(todoId)")
-            
-        case .getCategory(let memberId):
-            return URL(string: "\(baseURL)/category/categories/\(memberId)")
-            
-        case .addCategory(let memberId, _):
-            return URL(string: "\(baseURL)/category/\(memberId)")
-            
-        case .updateCategory(let categoryId, _), .deleteCategory(let categoryId):
-            return URL(string: "\(baseURL)/category/\(categoryId)")
-            
-        case .member(let memberId):
-            return URL(string: "\(baseURL)/member/\(memberId)")
-            
-        case .signup:
-            return URL(string: "\(baseURL)/member/sign-up")
-        case .signIn:
-            return URL(string: "\(baseURL)/member/sign-in")
-        }
+        return URL(string: baseURL + path)
     }
     
     var method: String {
         switch self {
-        case .addTodo, .addCategory, .signIn, .signup :
+        case .addTodo, .addCategory, .signIn, .signUp :
             return "POST"
-        case .getTodo, .getCategory , .member:
+        case .getTodo, .getCategory :
             return "GET"
         case .updateTodo, .updateCategory :
             return "PUT"
@@ -72,18 +80,21 @@ enum EndPoint {
     
     var body: Data? {
         switch self {
-        case .addTodo(_, let item):
+        case .addTodo( let item):
             return try? JSONEncoder().encode(item)
         case .updateTodo(_,let item):
             return try? JSONEncoder().encode(item)
-        case .addCategory(_, let category):
+        case .addCategory( let category):
             return try? JSONEncoder().encode(category)
         case .updateCategory(_, let category):
             return try? JSONEncoder().encode(category)
-        case .signIn(let item)  :
+        case .signIn(let item):
+            return try? JSONEncoder().encode(item)
+        case .signUp(let item):
             return try? JSONEncoder().encode(item)
         default :
             return nil
         }
     }
 }
+
