@@ -76,9 +76,17 @@ class MyPageViewController: UIViewController {
         self.title = "마이페이지"
         self.view.backgroundColor = .white
         
+        logoutBtn.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
+        changePwBtn.addTarget(self, action: #selector(changePasswordButtonTapped), for: .touchUpInside)
+        deleteAccountBtn.addTarget(self, action: #selector(deleteAccountButtonTapped), for: .touchUpInside)
+        
         setUpViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
     
       private func setUpViews() {
           self.view.addSubview(mainView)
@@ -109,13 +117,13 @@ class MyPageViewController: UIViewController {
           logoutBtn.snp.makeConstraints { make in
               make.top.equalTo(nameLabel.snp.bottom).offset(50)
               make.leading.equalTo(mainView).offset(10)
-              make.trailing.equalTo(mainView.snp.centerX).offset(-2)
+              make.trailing.equalTo(mainView.snp.centerX).offset(-1)
               make.height.equalTo(50)
           }
           
           changePwBtn.snp.makeConstraints { make in
               make.top.equalTo(nameLabel.snp.bottom).offset(50)
-              make.leading.equalTo(mainView.snp.centerX).offset(2)
+              make.leading.equalTo(mainView.snp.centerX).offset(1)
               make.trailing.equalTo(mainView).offset(-10)
               make.height.equalTo(50)
           }
@@ -123,14 +131,11 @@ class MyPageViewController: UIViewController {
           deleteAccountBtn.snp.makeConstraints { make in
               make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-40)
               make.centerX.equalTo(mainView)
-              make.width.equalTo(150)
-              make.height.equalTo(50)
+              make.width.equalTo(110)
+              make.height.equalTo(45)
           }
           
-          logoutBtn.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
-          changePwBtn.addTarget(self, action: #selector(changePasswordButtonTapped), for: .touchUpInside)
-          deleteAccountBtn.addTarget(self, action: #selector(deleteAccountButtonTapped), for: .touchUpInside)
-      }
+    }
     
     @objc private func logoutButtonTapped() {
      
@@ -138,13 +143,11 @@ class MyPageViewController: UIViewController {
     }
     
     @objc private func changePasswordButtonTapped() {
-        
-        
         print("Change password button tapped")
     }
     
     @objc private func deleteAccountButtonTapped() {
-       
+        
         print("Delete account button tapped")
     }
 }

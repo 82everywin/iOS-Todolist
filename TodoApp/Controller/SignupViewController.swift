@@ -3,7 +3,7 @@
 //  Todo_list
 //
 //  Created by 이예나 on 5/28/24.
-//ㄴ
+//
 import UIKit
 import SnapKit
 

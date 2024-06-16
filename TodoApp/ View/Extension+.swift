@@ -14,20 +14,17 @@ extension CategoryViewCell {
     }
 }
 
-
 extension TodoViewCell {
     static var identifier: String {
         return String (describing: self)
     }
 }
 
-
 extension AddCategoryCell {
     static var identifier: String {
         return String(describing: self)
     }
 }
-
 
 extension UIColor {
     convenience init(hexCode: String, alpha: CGFloat = 1.0) {
@@ -46,7 +43,7 @@ extension UIColor {
                       green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
                       blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
                       alpha: alpha)
-        }
+    }
     
     static let fontColor = UIColor(hexCode: "735B37")
     static let labelFontColor = UIColor(hexCode: "553910")
@@ -62,7 +59,5 @@ extension UIColor {
     static let thinPink = UIColor(hexCode: "FFF5F9")
     static let thinYellow = UIColor(hexCode: "FFFDEE")
     static let thinGreen = UIColor(hexCode: "F0FFFE")
-    static let thinPurple = UIColor(hexCode: "735B37")
+    static let thinPurple = UIColor(hexCode: "F2F1FF")
 }
-
-

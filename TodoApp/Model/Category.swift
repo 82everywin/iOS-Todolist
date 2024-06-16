@@ -7,14 +7,26 @@
 
 import Foundation
 
-
-struct Category : Codable{
+struct CategoryResponse: Codable{
     var categoryId: Int
     var content: String
     var color: String
 }
 
-struct AddCategory: Codable{
+struct CategoryRequest: Codable{
     var content: String
     var color: String
 }
+
+struct CategoryTodoRequest: Codable{
+    var categoryId: Int
+    var content: String
+    var color: String
+}
+
+
+//"category": {
+//    "categoryId": 1,
+//    "content": "약속",
+//    "color": "FFFFFF"
+//  }

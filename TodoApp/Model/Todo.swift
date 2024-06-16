@@ -7,16 +7,37 @@
 
 import Foundation
 
+//JSON - Response
+//{
+//  "todoId": 1,
+//  "content": "친구랑 치킨집",
+//  "checked": false,
+//  "setDate": "2024-06-16",
+//  "category": {
+//    "categoryId": 1,
+//    "content": "약속",
+//    "color": "FFFFFF"
+//  }
+//}
 
-struct Todo: Codable{
+struct TodoResponse: Codable{
     var todoId: Int
     var content: String
     var checked: Bool
-    var category: Category
+    var setDate: String
+    var category: CategoryResponse
 }
 
-
-struct AddTodo: Codable {
+struct TodoRequest: Codable{
     var content: String
-    var category: Category
+    var checked: Bool
+    var setDate: String
+    var category: CategoryTodoRequest
+}
+
+struct UpdateTodoRequest: Codable{
+    var content: String
+    var checked: Bool
+    var setDate: String
+    var category: CategoryRequest
 }

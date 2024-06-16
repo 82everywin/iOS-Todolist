@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		64153F14779515E24BC8A296 /* Pods_TodoApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA35A18F6F6FB52952526208 /* Pods_TodoApp.framework */; };
-		8B6DB3922C0EFD7300804DE9 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB3912C0EFD7300804DE9 /* CustomColor.swift */; };
+		8B6BE3EF2C1F614000BAC74D /* DateFormatterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6BE3EE2C1F614000BAC74D /* DateFormatterManager.swift */; };
 		8B6DB3962C0F055200804DE9 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB3952C0F055200804DE9 /* SignupViewController.swift */; };
 		8B6DB39A2C0F058700804DE9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB3992C0F058700804DE9 /* MainViewController.swift */; };
 		8B6DB39C2C0F05BA00804DE9 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB39B2C0F05BA00804DE9 /* SignInViewController.swift */; };
@@ -23,6 +23,9 @@
 		8B8725622C05DD1A00E2B9F8 /* CategoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8725612C05DD1A00E2B9F8 /* CategoryDetailViewController.swift */; };
 		8B8725642C0677FF00E2B9F8 /* TodoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8725632C0677FF00E2B9F8 /* TodoDetailViewController.swift */; };
 		8B8725662C087DBB00E2B9F8 /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8725652C087DBB00E2B9F8 /* EndPoint.swift */; };
+		8B95FA8F2C1E874300C4CB83 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B95FA8E2C1E874300C4CB83 /* CustomLabel.swift */; };
+		8B95FA912C1E8D6500C4CB83 /* Msg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B95FA902C1E8D6500C4CB83 /* Msg.swift */; };
+		8B95FA932C1E9AC100C4CB83 /* TokenAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B95FA922C1E9AC100C4CB83 /* TokenAPI.swift */; };
 		8BBC51B62C020127005EB184 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBC51B52C020127005EB184 /* AppDelegate.swift */; };
 		8BBC51B82C020127005EB184 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBC51B72C020127005EB184 /* SceneDelegate.swift */; };
 		8BBC51BF2C02012A005EB184 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BBC51BE2C02012A005EB184 /* Assets.xcassets */; };
@@ -33,7 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8B6DB3912C0EFD7300804DE9 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
+		8B6BE3EE2C1F614000BAC74D /* DateFormatterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterManager.swift; sourceTree = "<group>"; };
 		8B6DB3952C0F055200804DE9 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		8B6DB3992C0F058700804DE9 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		8B6DB39B2C0F05BA00804DE9 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
@@ -48,6 +51,9 @@
 		8B8725612C05DD1A00E2B9F8 /* CategoryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDetailViewController.swift; sourceTree = "<group>"; };
 		8B8725632C0677FF00E2B9F8 /* TodoDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDetailViewController.swift; sourceTree = "<group>"; };
 		8B8725652C087DBB00E2B9F8 /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
+		8B95FA8E2C1E874300C4CB83 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
+		8B95FA902C1E8D6500C4CB83 /* Msg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Msg.swift; sourceTree = "<group>"; };
+		8B95FA922C1E9AC100C4CB83 /* TokenAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenAPI.swift; sourceTree = "<group>"; };
 		8BBC51B22C020127005EB184 /* TodoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BBC51B52C020127005EB184 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8BBC51B72C020127005EB184 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -143,11 +149,12 @@
 			children = (
 				8B8725652C087DBB00E2B9F8 /* EndPoint.swift */,
 				8BBC51D62C025FB9005EB184 /* FetchAPI.swift */,
+				8B95FA922C1E9AC100C4CB83 /* TokenAPI.swift */,
+				8B95FA902C1E8D6500C4CB83 /* Msg.swift */,
 				8B6DB39F2C101BD800804DE9 /* SignIn.swift */,
 				8B6DB3A12C10490500804DE9 /* SignUp.swift */,
 				8BBC51D22C025E24005EB184 /* Todo.swift */,
 				8B87255D2C027E5B00E2B9F8 /* Category.swift */,
-				8B6DB3912C0EFD7300804DE9 /* CustomColor.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -157,8 +164,10 @@
 			children = (
 				8B8725572C02797800E2B9F8 /* CategoryViewCell.swift */,
 				8B8725592C0279D900E2B9F8 /* Extension+.swift */,
+				8B6BE3EE2C1F614000BAC74D /* DateFormatterManager.swift */,
 				8B87255F2C05DB5900E2B9F8 /* AddCategoryCell.swift */,
 				8B87255B2C027C3A00E2B9F8 /* TodoViewCell.swift */,
+				8B95FA8E2C1E874300C4CB83 /* CustomLabel.swift */,
 			);
 			path = " View";
 			sourceTree = "<group>";
@@ -280,21 +289,24 @@
 				8B6DB3A02C101BD800804DE9 /* SignIn.swift in Sources */,
 				8BBC51D32C025E24005EB184 /* Todo.swift in Sources */,
 				8B6DB3A22C10490500804DE9 /* SignUp.swift in Sources */,
-				8B6DB3922C0EFD7300804DE9 /* CustomColor.swift in Sources */,
 				8BBC51B62C020127005EB184 /* AppDelegate.swift in Sources */,
 				8B6DB39C2C0F05BA00804DE9 /* SignInViewController.swift in Sources */,
 				8BBC51B82C020127005EB184 /* SceneDelegate.swift in Sources */,
 				8B87255E2C027E5B00E2B9F8 /* Category.swift in Sources */,
 				8BBC51D72C025FB9005EB184 /* FetchAPI.swift in Sources */,
 				8B8725602C05DB5900E2B9F8 /* AddCategoryCell.swift in Sources */,
+				8B6BE3EF2C1F614000BAC74D /* DateFormatterManager.swift in Sources */,
+				8B95FA8F2C1E874300C4CB83 /* CustomLabel.swift in Sources */,
 				8BBC51D12C020748005EB184 /* TodoViewController.swift in Sources */,
 				8B8725662C087DBB00E2B9F8 /* EndPoint.swift in Sources */,
 				8B6DB3962C0F055200804DE9 /* SignupViewController.swift in Sources */,
+				8B95FA932C1E9AC100C4CB83 /* TokenAPI.swift in Sources */,
 				8B8725582C02797800E2B9F8 /* CategoryViewCell.swift in Sources */,
 				8B8725642C0677FF00E2B9F8 /* TodoDetailViewController.swift in Sources */,
 				8B6DB39E2C0F07E000804DE9 /* MyPageViewController.swift in Sources */,
 				8B87255C2C027C3A00E2B9F8 /* TodoViewCell.swift in Sources */,
 				8B6DB39A2C0F058700804DE9 /* MainViewController.swift in Sources */,
+				8B95FA912C1E8D6500C4CB83 /* Msg.swift in Sources */,
 				8B8725622C05DD1A00E2B9F8 /* CategoryDetailViewController.swift in Sources */,
 				8B87255A2C0279D900E2B9F8 /* Extension+.swift in Sources */,
 			);

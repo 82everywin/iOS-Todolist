@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 class MainViewController: UIViewController {
     // main화면 중앙 사진 랜덤 구현 - 배열과 랜덤한 인덱스 사용
@@ -23,7 +24,7 @@ class MainViewController: UIViewController {
     private lazy var loginButton: UIButton = {
         var button = UIButton(type: .custom)
         button.setTitle("로그인", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         button.setTitleColor(UIColor(hexCode: "#FFFFFF"), for: .normal)
         button.backgroundColor = UIColor.MainBackground
         button.layer.cornerRadius = 5
@@ -37,7 +38,7 @@ class MainViewController: UIViewController {
     private lazy var signupButton: UIButton = {
         var button = UIButton(type: .custom)
         button.setTitle("회원가입", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         button.setTitleColor(UIColor.MainBackground, for: .normal)
         button.backgroundColor = .clear // 버튼 배경색: 투명
         button.layer.cornerRadius = 5
@@ -56,9 +57,8 @@ class MainViewController: UIViewController {
         let spacerView = UIView() //특정 내부간격 설정
         spacerView.snp.makeConstraints { make in
                    make.height.equalTo(40)
-        }        // 배열을 사용하여 각각의 객체를 하나로 묶는 코드
+        }
         let stView = UIStackView(arrangedSubviews: [mainImage, logoImage, spacerView, loginButton, signupButton])
-        
         
         stView.spacing = 20    // 객체의 내부 간격 설정
         stView.axis = .vertical  // 세로 묶음으로 정렬 (가로 묶음은 horizontal)

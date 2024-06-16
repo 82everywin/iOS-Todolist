@@ -6,7 +6,7 @@ target 'TodoApp' do
   use_frameworks!
 
   # Pods for TodoApp
-  pod 'Alamofire'
   pod 'SnapKit', '~> 5.6.0'
+  pod 'Alamofire', '~> 5.4'
 
 end

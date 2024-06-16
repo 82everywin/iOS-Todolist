@@ -14,13 +14,18 @@
 import Foundation
 
 // MARK: - LoginResponse
-struct LoginResponse: Codable {
-    let memberId: Int
-    let userId: String
-}
+//struct LoginResponse: Codable {
+//    let memberId: Int
+//    let userId: String
+//}
 
 // MARK: - LoginData
 struct SignIn: Codable{
     let userId: String
     let userPw: String
 }
+
+struct SignInResponse: Codable{
+    let token: String
+}
+

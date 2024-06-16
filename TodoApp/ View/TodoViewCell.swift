@@ -12,31 +12,32 @@ import SwiftUI
 
 final class TodoViewCell: UICollectionViewCell {
     
-    let circleView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "checkmark.circle")
-        return imageView
+    private var todo: TodoResponse?
+    
+    private let circleView: UIView = {
+        let view = UIView()
+        view.layer.borderWidth = 1
+        view.layer.cornerRadius = 13
+        view.backgroundColor = .white
+        return view
     }()
     
+    private let checkmarkImageView: UIImageView = {
+          let imageView = UIImageView()
+          imageView.contentMode = .scaleAspectFit
+          imageView.isHidden = true // 초기에는 숨김 상태
+          return imageView
+      }()
     
-
-//    private let checkCircleView: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = .white
-//        view.layer.borderWidth = 1
-//        view.layer.backgroundColor = UIColor.gray.cgColor
-//        view.layer.cornerRadius = 15
-//        view.backgroundColor = .white
-//        return view
-//    }()
-    
-    private let todoLabel: UILabel = {
-        let label = UILabel()
+    private let todoLabel: CustomLabel = {
+        let label = CustomLabel()
         label.textAlignment = .left
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.layer.backgroundColor = UIColor(hexCode: "FFFFFF").cgColor
-        //UIColor(hexCode: "F1F1F1").cgColor
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = UIColor.fontColor
+        label.layer.cornerRadius = 10
+        label.layer.borderWidth = 1
+        label.layer.masksToBounds = true
+        label.textInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
         return label
     }()
     
@@ -50,24 +51,32 @@ final class TodoViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpViews()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapCircleView(_:))) // UIImageView 클릭 제스쳐
+        circleView.addGestureRecognizer(tapGesture)
+        circleView.isUserInteractionEnabled = true
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     func setUpViews() {
-        addSubview(circleView)
+        contentView.addSubview(circleView)
         self.circleView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(2)
+            make.leading.equalToSuperview().offset(8)
             make.centerY.equalToSuperview()
-            make.width.height.equalTo(35)
+            make.width.height.equalTo(26)
         }
         
-        addSubview(todoContainerView)
+        circleView.addSubview(checkmarkImageView)
+        checkmarkImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(5)
+        }
+        
+        contentView.addSubview(todoContainerView)
         self.todoContainerView.snp.makeConstraints{ make in
-            make.leading.equalTo(circleView.snp.trailing).offset(5)
+            make.leading.equalTo(circleView.snp.trailing).offset(6)
             make.centerY.equalToSuperview()
             make.trailing.equalToSuperview().offset(-10)
             make.height.equalToSuperview()
@@ -75,17 +84,68 @@ final class TodoViewCell: UICollectionViewCell {
         
         todoContainerView.addSubview(todoLabel)
         todoLabel.snp.makeConstraints{ make in
-            make.leading.equalTo(todoContainerView.snp.leading).offset(10)
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-10)
-            make.height.equalTo(35)
+            make.edges.equalTo(todoContainerView).inset(5)
         }
-        
     }
     
-    func configure(with item: Todo) {
+    func configure(with item: TodoResponse) {
+        self.todo = item
         todoLabel.text = item.content
+        todoLabel.layer.borderColor = UIColor(hexCode: item.category.color).cgColor
+        
         circleView.layer.borderColor = UIColor(hexCode: item.category.color).cgColor
-        circleView.backgroundColor = item.checked ? UIColor(hexCode: item.category.color) : .white
+        updateCheckmarkUI(isChecked: item.checked)
+        
+        let categoryColorHex = item.category.color
+        switch categoryColorHex {
+        case "F9B0CA":
+            todoLabel.backgroundColor = UIColor.thinPink
+        case "47D2CA" :
+            todoLabel.backgroundColor = UIColor.thinGreen
+        case "FFE560" :
+            todoLabel.backgroundColor = UIColor.thinYellow
+        case "B6B0F9" :
+            todoLabel.backgroundColor = UIColor.thinPurple
+        default:
+            todoLabel.backgroundColor = UIColor.white
         }
+    }
+    
+    @objc func tapCircleView(_ sender: UITapGestureRecognizer){
+        guard let todo = todo else { return}
+        
+        let newCheckedState = !todo.checked
+    
+        Task{
+            do {
+                let category = CategoryRequest(content: todo.category.content,
+                                               color: todo.category.color)
+                let updateTodo = UpdateTodoRequest(content: todo.content, checked: newCheckedState, setDate: todo.setDate, category: category)
+                let checkedCircle = try await TokenAPI.shared.updateTodo(todoId: self.todo!.todoId, todo: updateTodo)
+                print("Todo update : \(checkedCircle)")
+                
+                self.todo?.checked = newCheckedState
+                updateCheckmarkUI(isChecked: newCheckedState)
+            }
+            catch{
+                let alert = UIAlertController(title: "Error", message: "Failed to update TOdo", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+               // present(alert, animated: true, completion: nil )
+                print("Failed to update Todo: \(error)")
+            }
+        }
+    }
+    
+    private func updateCheckmarkUI(isChecked: Bool){
+        checkmarkImageView.isHidden = !isChecked
+        circleView.backgroundColor = isChecked ? UIColor(hexCode: (self.todo?.category.color)!) : .white
+        if isChecked {
+            checkmarkImageView.image = UIImage(named: "Check_Big")
+        }
+        else {
+            checkmarkImageView.image = nil
+        }
+    }
 }
+
+
