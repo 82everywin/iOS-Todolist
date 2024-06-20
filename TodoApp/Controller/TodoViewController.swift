@@ -55,7 +55,7 @@ final class TodoViewController: UIViewController {
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.lineColor.cgColor
         button.layer.shadowColor = UIColor(hexCode: "000000").cgColor
-        button.layer.shadowOffset = CGSize(width: 3, height: 4)
+        button.layer.shadowOffset = CGSize(width: 2, height: 2)
         button.layer.shadowRadius = 4
         button.layer.shadowOpacity = 0.1
         button.layer.masksToBounds = false
@@ -402,7 +402,7 @@ extension TodoViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     @objc func goToMypage() {
-        let myPageVC = MyPageViewController()
+        let myPageVC = MyPageViewController(accToken: self.accToken)
         navigationController?.pushViewController(myPageVC, animated: true)
     }
     

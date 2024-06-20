@@ -30,14 +30,13 @@ struct TodoResponse: Codable{
 
 struct TodoRequest: Codable{
     var content: String
-    var checked: Bool
     var setDate: String
-    var category: CategoryTodoRequest
+    var categoryId: Int
 }
 
 struct UpdateTodoRequest: Codable{
     var content: String
     var checked: Bool
     var setDate: String
-    var category: CategoryRequest
+    var categoryId: Int
 }

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		64153F14779515E24BC8A296 /* Pods_TodoApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA35A18F6F6FB52952526208 /* Pods_TodoApp.framework */; };
+		8B5C74FF2C241E42001D7BAD /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C74FE2C241E42001D7BAD /* Member.swift */; };
+		8B5C75012C243188001D7BAD /* DeleteMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C75002C243188001D7BAD /* DeleteMemberViewController.swift */; };
+		8B5C75032C246380001D7BAD /* DeleteCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C75022C246380001D7BAD /* DeleteCategoryViewController.swift */; };
 		8B6BE3EF2C1F614000BAC74D /* DateFormatterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6BE3EE2C1F614000BAC74D /* DateFormatterManager.swift */; };
 		8B6DB3962C0F055200804DE9 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB3952C0F055200804DE9 /* SignupViewController.swift */; };
 		8B6DB39A2C0F058700804DE9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DB3992C0F058700804DE9 /* MainViewController.swift */; };
@@ -36,6 +39,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8B5C74FE2C241E42001D7BAD /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		8B5C75002C243188001D7BAD /* DeleteMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteMemberViewController.swift; sourceTree = "<group>"; };
+		8B5C75022C246380001D7BAD /* DeleteCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteCategoryViewController.swift; sourceTree = "<group>"; };
 		8B6BE3EE2C1F614000BAC74D /* DateFormatterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterManager.swift; sourceTree = "<group>"; };
 		8B6DB3952C0F055200804DE9 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		8B6DB3992C0F058700804DE9 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -134,7 +140,9 @@
 			isa = PBXGroup;
 			children = (
 				8B6DB39D2C0F07E000804DE9 /* MyPageViewController.swift */,
+				8B5C75022C246380001D7BAD /* DeleteCategoryViewController.swift */,
 				8BBC51D02C020748005EB184 /* TodoViewController.swift */,
+				8B5C75002C243188001D7BAD /* DeleteMemberViewController.swift */,
 				8B8725612C05DD1A00E2B9F8 /* CategoryDetailViewController.swift */,
 				8B8725632C0677FF00E2B9F8 /* TodoDetailViewController.swift */,
 				8B6DB3952C0F055200804DE9 /* SignupViewController.swift */,
@@ -155,6 +163,7 @@
 				8B6DB3A12C10490500804DE9 /* SignUp.swift */,
 				8BBC51D22C025E24005EB184 /* Todo.swift */,
 				8B87255D2C027E5B00E2B9F8 /* Category.swift */,
+				8B5C74FE2C241E42001D7BAD /* Member.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -289,10 +298,12 @@
 				8B6DB3A02C101BD800804DE9 /* SignIn.swift in Sources */,
 				8BBC51D32C025E24005EB184 /* Todo.swift in Sources */,
 				8B6DB3A22C10490500804DE9 /* SignUp.swift in Sources */,
+				8B5C75032C246380001D7BAD /* DeleteCategoryViewController.swift in Sources */,
 				8BBC51B62C020127005EB184 /* AppDelegate.swift in Sources */,
 				8B6DB39C2C0F05BA00804DE9 /* SignInViewController.swift in Sources */,
 				8BBC51B82C020127005EB184 /* SceneDelegate.swift in Sources */,
 				8B87255E2C027E5B00E2B9F8 /* Category.swift in Sources */,
+				8B5C74FF2C241E42001D7BAD /* Member.swift in Sources */,
 				8BBC51D72C025FB9005EB184 /* FetchAPI.swift in Sources */,
 				8B8725602C05DB5900E2B9F8 /* AddCategoryCell.swift in Sources */,
 				8B6BE3EF2C1F614000BAC74D /* DateFormatterManager.swift in Sources */,
@@ -306,6 +317,7 @@
 				8B6DB39E2C0F07E000804DE9 /* MyPageViewController.swift in Sources */,
 				8B87255C2C027C3A00E2B9F8 /* TodoViewCell.swift in Sources */,
 				8B6DB39A2C0F058700804DE9 /* MainViewController.swift in Sources */,
+				8B5C75012C243188001D7BAD /* DeleteMemberViewController.swift in Sources */,
 				8B95FA912C1E8D6500C4CB83 /* Msg.swift in Sources */,
 				8B8725622C05DD1A00E2B9F8 /* CategoryDetailViewController.swift in Sources */,
 				8B87255A2C0279D900E2B9F8 /* Extension+.swift in Sources */,

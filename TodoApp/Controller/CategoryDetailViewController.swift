@@ -299,22 +299,11 @@ final class CategoryDetailViewController: UIViewController {
     @objc func deleteCategory() {
         guard let content = categoryName.text, !content.isEmpty  else { return}
         
-        Task {
-            do {
-                if selectedCategory != nil {
-                    let deletedCategory = try await TokenAPI.shared.deleteCategory(categoryId: categoryId!)
-                    print("Category update :\(deletedCategory)")
-                }
-                
-                navigationController?.popViewController(animated: true)
-                
-            }catch {
-                let alert = UIAlertController(title: "Error", message: "Failed to add category", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                present(alert, animated: true, completion: nil)
-                print("Failed to add category: \(error)")
-            }
-        }
+        let modalVC = DeleteCategoryViewController(accToken: accToken, 
+                                                   categoryId: categoryId!,
+                                                   categoryName: categoryName.text!)
+        modalVC.modalPresentationStyle = .overFullScreen
+        self.present(modalVC, animated: false, completion: nil)
     }
 
 }

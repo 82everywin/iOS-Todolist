@@ -82,4 +82,11 @@ class TokenAPI {
     func deleteCategory(categoryId: Int) async throws -> Msg {
         try await tokenAPI(.deleteCategory(categoryId: categoryId))
     }
+    
+    func getMember() async throws -> getMemberResponse {
+        try await tokenAPI(.getMember)
+    }
+    func deleteMember() async throws -> Msg {
+        try await tokenAPI(.deleteMember)
+    }
 }

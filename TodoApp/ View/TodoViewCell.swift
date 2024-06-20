@@ -118,9 +118,7 @@ final class TodoViewCell: UICollectionViewCell {
     
         Task{
             do {
-                let category = CategoryRequest(content: todo.category.content,
-                                               color: todo.category.color)
-                let updateTodo = UpdateTodoRequest(content: todo.content, checked: newCheckedState, setDate: todo.setDate, category: category)
+                let updateTodo = UpdateTodoRequest(content: todo.content, checked: newCheckedState, setDate: todo.setDate, categoryId: todo.category.categoryId)
                 let checkedCircle = try await TokenAPI.shared.updateTodo(todoId: self.todo!.todoId, todo: updateTodo)
                 print("Todo update : \(checkedCircle)")
                 

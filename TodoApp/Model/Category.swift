@@ -20,8 +20,6 @@ struct CategoryRequest: Codable{
 
 struct CategoryTodoRequest: Codable{
     var categoryId: Int
-    var content: String
-    var color: String
 }
 
 
