@@ -27,6 +27,8 @@ enum EndPoint {
     case deleteCategory(categoryId: Int)
     case signIn(item: SignIn)
     case signUp(item: Signup)
+    case getMember
+    case deleteMember
     
     var path: String {
       
@@ -57,6 +59,9 @@ enum EndPoint {
             
         case .signIn(_):
             return "/member/sign-in"
+        
+        case .getMember, .deleteMember:
+            return "/member"
         }
     }
     
@@ -69,11 +74,11 @@ enum EndPoint {
         switch self {
         case .addTodo, .addCategory, .signIn, .signUp :
             return "POST"
-        case .getTodo, .getCategory :
+        case .getTodo, .getCategory, .getMember :
             return "GET"
         case .updateTodo, .updateCategory :
             return "PUT"
-        case .deleteTodo, .deleteCategory :
+        case .deleteTodo, .deleteCategory, .deleteMember :
             return "DELETE"
         }
     }

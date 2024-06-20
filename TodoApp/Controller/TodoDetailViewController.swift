@@ -14,7 +14,7 @@ class TodoDetailViewController: UIViewController {
     var selectedTodo : TodoResponse?
     var selectedCategory: CategoryResponse?
 
-    var choiceCategory: CategoryTodoRequest = CategoryTodoRequest(categoryId: 0, content: "", color: "")
+    var choiceCategory: CategoryTodoRequest = CategoryTodoRequest(categoryId: 0)
     var categoryRequest: CategoryRequest = CategoryRequest(content: "", color: "")
     
     var currentMonth = Calendar.current.component(.month, from: Date())
@@ -24,6 +24,7 @@ class TodoDetailViewController: UIViewController {
     
     private let monthLabel: UILabel = {
         let label = UILabel()
+        label.textAlignment = .right
         label.font = UIFont.boldSystemFont(ofSize: 26)
         label.textColor = UIColor.labelFontColor
         return label
@@ -31,6 +32,7 @@ class TodoDetailViewController: UIViewController {
     
     private let dayLabel: UILabel = {
         let label = UILabel()
+        label.textAlignment = .left
         label.font = UIFont.boldSystemFont(ofSize: 25)
         label.textColor = UIColor.labelFontColor
         return label
@@ -54,9 +56,15 @@ class TodoDetailViewController: UIViewController {
     
     private let todoView: UIView = {
         let view = UIView()
+        view.backgroundColor = .white
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.lineColor.cgColor
         view.layer.cornerRadius = 10
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.1
+        view.layer.shadowOffset = CGSize(width: 2, height: 4 )
+        view.layer.shadowRadius = 5
+        view.layer.masksToBounds = false
         return view
     }()
     
@@ -66,7 +74,7 @@ class TodoDetailViewController: UIViewController {
         field.font = UIFont.systemFont(ofSize: 16)
         field.textColor = UIColor(hexCode: "232323")
         field.backgroundColor = UIColor.white
-        field.layer.masksToBounds = true
+        field.clipsToBounds = true
         
         field.attributedPlaceholder = NSAttributedString(string: "To do를 입력해주세요!", attributes: [NSAttributedString.Key.foregroundColor: UIColor(hexCode: "D0D0D0")])
         return field
@@ -90,9 +98,15 @@ class TodoDetailViewController: UIViewController {
     
     private let categoryCollectionView: UIView = {
         let view = UIView()
+        view.backgroundColor = .white
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.lineColor.cgColor
         view.layer.cornerRadius = 10
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.1
+        view.layer.shadowOffset = CGSize(width: 2, height: 4 )
+        view.layer.shadowRadius = 5
+        view.layer.masksToBounds = false
         return view
     }()
     
@@ -152,14 +166,14 @@ class TodoDetailViewController: UIViewController {
         monthLabel.snp.makeConstraints{ make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(40)
             make.leading.equalTo(view).offset(20)
-            make.width.equalTo(55)
+         //   make.width.equalTo(55)
         }
         
         self.view.addSubview(dayLabel)
         dayLabel.snp.makeConstraints{ make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(40)
             make.leading.equalTo(monthLabel.snp.trailing).offset(2)
-            make.width.equalTo(60)
+         //   make.width.equalTo(60)
         }
         
         self.view.addSubview(calendarButton)
@@ -260,11 +274,7 @@ class TodoDetailViewController: UIViewController {
             
             if let index = categories.firstIndex(where: { $0.categoryId == todo.category.categoryId }) {
                 selectedCategoryIndex = index
-                choiceCategory = CategoryTodoRequest(
-                                   categoryId: categories[index].categoryId,
-                                   content: categories[index].content,
-                                   color: categories[index].color
-                               )
+                choiceCategory = CategoryTodoRequest(categoryId: categories[index].categoryId)
             }
             categoryView.reloadData()
         }
@@ -352,21 +362,16 @@ class TodoDetailViewController: UIViewController {
         Task{
             do {
                 if selectedTodo != nil {
-                   let categoryRequest = CategoryRequest(content: choiceCategory.content, color: choiceCategory.color)
-                    let newTodo = UpdateTodoRequest(content: todo, checked: selectedTodo!.checked, setDate: selectDate!, category: categoryRequest)
-                    print("update newTodo: \(newTodo)")
+                    let newTodo = UpdateTodoRequest(content: todo, checked: selectedTodo!.checked, setDate: selectDate!, categoryId: choiceCategory.categoryId)
                     let updateTodo = try await TokenAPI.shared.updateTodo(todoId: selectedTodo!.todoId, todo: newTodo)
-                    print(updateTodo)
                 } else {
-                    let newTodo = TodoRequest(content: todo, checked: false, setDate: selectDate!, category: choiceCategory)
-                    print("add newTodo: \(newTodo)")
+                    let newTodo = TodoRequest(content: todo, setDate: selectDate!, categoryId: choiceCategory.categoryId)
                     let addTodo = try await TokenAPI.shared.addTodo(todo: newTodo)
-                    print(addTodo)
                 }
                 navigationController?.popViewController(animated: true)
                 
             } catch {
-                let alert = UIAlertController(title: "Error", message: "Failed to add Todo", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Error", message: "할 일 생성에 실패하였습니다. 잠시 후 다시 시도해주세요.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 present(alert, animated: true, completion: nil)
                 print("Failed to add Todo: \(error)")
@@ -389,11 +394,7 @@ extension TodoDetailViewController: UICollectionViewDataSource, UICollectionView
         if selectedCategoryIndex != nil { // 선택 후
             if isSelected {
                 cell.configure(with: categories[selectedCategoryIndex!])
-                choiceCategory = CategoryTodoRequest(
-                    categoryId: categories[selectedCategoryIndex!].categoryId,
-                    content: categories[selectedCategoryIndex!].content,
-                    color: categories[selectedCategoryIndex!].color
-                )
+                choiceCategory = CategoryTodoRequest(categoryId: categories[selectedCategoryIndex!].categoryId)
             } else{
                 cell.choice(with: category)
             }
@@ -417,11 +418,7 @@ extension TodoDetailViewController: UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedCategoryIndex = indexPath.item
-        choiceCategory = CategoryTodoRequest(
-                          categoryId: categories[selectedCategoryIndex!].categoryId,
-                          content: categories[selectedCategoryIndex!].content,
-                          color: categories[selectedCategoryIndex!].color
-                          )
+        choiceCategory = CategoryTodoRequest( categoryId: categories[selectedCategoryIndex!].categoryId)
         collectionView.reloadData()
         updateButtonState()
     }
