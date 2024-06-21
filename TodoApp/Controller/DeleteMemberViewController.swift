@@ -44,6 +44,7 @@ class DeleteMemberViewController: UIViewController{
        let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.textColor = UIColor.black
         label.numberOfLines = 1
         return label
     }()
@@ -51,6 +52,7 @@ class DeleteMemberViewController: UIViewController{
     private let messageLabel: UILabel = {
         let label = UILabel()
         label.text = "정말 계정을 삭제하실건가요?"
+        label.textColor = UIColor.black
         label.textAlignment = .center
         return label
     }()
@@ -175,12 +177,11 @@ class DeleteMemberViewController: UIViewController{
         self.dismiss(animated: false, completion: nil)
     }
     
-    @objc func deleteButtonTapped() async {
+    @objc func deleteButtonTapped() {
         Task {
             do{
                 let result = try await TokenAPI.shared.deleteMember()
                 print("Successed Delete Member : \(result)")
-                
             }catch {
                 print("Failed Delete Member")
             }

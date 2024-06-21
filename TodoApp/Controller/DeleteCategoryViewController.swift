@@ -47,6 +47,7 @@ class DeleteCategoryViewController: UIViewController {
        let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textColor = UIColor.black
         label.numberOfLines = 1
         return label
     }()
@@ -55,6 +56,7 @@ class DeleteCategoryViewController: UIViewController {
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = UIColor.black
         label.numberOfLines = 3
         return label
     }()
@@ -104,13 +106,15 @@ class DeleteCategoryViewController: UIViewController {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         
         categoryLabel.text = "\"\(categoryName)\""
-        
-        let attributedMessage = NSMutableAttributedString(string: "카테고리를 삭제하시겠습니까?  이 카테고리로 등록되어있는 할 일이 모두 삭제됩니다.")
+        print(categroyId)
+        let attributedMessage = NSMutableAttributedString(string: "카테고리를 삭제하시겠습니까?  이 카테고리로 등록되어있는 \n 할 일이 모두 삭제됩니다.")
        let range1 = (attributedMessage.string as NSString).range(of: " 삭제")
      
        attributedMessage.addAttribute(.foregroundColor, value: UIColor(hexCode: "FF3E3E"), range: range1)
        
         messageLabel.attributedText = attributedMessage
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 4
         
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
@@ -191,19 +195,18 @@ class DeleteCategoryViewController: UIViewController {
         self.dismiss(animated: false, completion: nil)
     }
     
-    @objc func deleteButtonTapped() async {
+    @objc func deleteButtonTapped() {
         Task {
             do{
                 let result = try await TokenAPI.shared.deleteCategory(categoryId: categroyId)
                 print("Successed Delete Category : \(result)")
-                
+               
             }catch {
                 print("Failed Delete Member")
             }
         }
-       
-        let todoVC = TodoViewController(accToken: accToken)
-        navigationController?.pushViewController(todoVC, animated: true)
-        
+        NotificationCenter.default.post(name: NSNotification.Name( "CategoryDeleted"), object: nil)
+        self.dismiss(animated: false, completion: nil)
+      
     }
 }

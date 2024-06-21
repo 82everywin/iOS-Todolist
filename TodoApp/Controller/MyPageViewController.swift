@@ -58,6 +58,7 @@ class MyPageViewController: UIViewController {
         label.text = "안녕하세요."
         label.textAlignment = .right
         label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = UIColor(hexCode: "232323")
         label.clipsToBounds = true
         return label
     }()
@@ -66,6 +67,7 @@ class MyPageViewController: UIViewController {
         let label = UILabel()
         label.textAlignment = .right
         label.font = UIFont.boldSystemFont(ofSize: 22)
+        label.textColor = UIColor(hexCode: "232323")
         label.clipsToBounds = true
         return label
     }()
@@ -75,6 +77,7 @@ class MyPageViewController: UIViewController {
         label.text = "님!"
         label.textAlignment = .left
         label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = UIColor(hexCode: "232323")
         return label
     }()
     

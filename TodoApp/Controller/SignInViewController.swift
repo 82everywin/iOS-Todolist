@@ -219,12 +219,8 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         Task {
             do {
                 let newLogin = SignIn(userId: setUserId, userPw: setUserPw)
-                
                 let SignInResponse = try await FetchAPI.shared.signIn(data: newLogin)
-                print("Permit Login: \(SignInResponse)")
-                
                 TokenAPI.shared.setToken(SignInResponse.token)
-                
                 let todoVC = TodoViewController(accToken: SignInResponse.token)
                 navigationController?.pushViewController(todoVC, animated: true)
                 

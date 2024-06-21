@@ -120,6 +120,8 @@ final class CategoryDetailViewController: UIViewController {
         setUpViews()
         setupColorButtons()
         didSelectCategory()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(categoryDeleted), name: NSNotification.Name( "CategoryDeleted"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -304,6 +306,11 @@ final class CategoryDetailViewController: UIViewController {
                                                    categoryName: categoryName.text!)
         modalVC.modalPresentationStyle = .overFullScreen
         self.present(modalVC, animated: false, completion: nil)
+    }
+    
+    @objc func categoryDeleted() {
+        _ = TodoViewController(accToken: accToken)
+        self.navigationController?.popViewController(animated: true)
     }
 
 }
