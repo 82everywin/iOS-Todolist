@@ -14,7 +14,7 @@ class TodoDetailViewController: UIViewController, FSCalendarDelegate, FSCalendar
     var selectedCategoryIndex: Int?
     var selectedTodo : TodoResponse?
     var selectedCategory: CategoryResponse?
-    var onTodoAdded: ((TodoResponse) -> Void)?
+    var onTodoAdded: (() -> Void)?
 
     var choiceCategory: CategoryTodoRequest = CategoryTodoRequest(categoryId: 0)
     var categoryRequest: CategoryRequest = CategoryRequest(content: "", color: "")
@@ -177,6 +177,15 @@ class TodoDetailViewController: UIViewController, FSCalendarDelegate, FSCalendar
         updateMonthLabel()
         updateDayLabel()
         getCategory()
+        calendarStyle()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func dismissKeyboard() {
+        self.view.endEditing(true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -339,6 +348,10 @@ class TodoDetailViewController: UIViewController, FSCalendarDelegate, FSCalendar
         }
     }
     
+    @objc func textFieldDidChangeSelection(_ textField: UITextField){
+           updateButtonState()
+    }
+    
     @objc func viewCalendar() {
         calendar.isHidden = false
         calendarView.isHidden = false
@@ -372,6 +385,7 @@ class TodoDetailViewController: UIViewController, FSCalendarDelegate, FSCalendar
     }
     
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        selectDate = DateFormatterManager.shared.string(from: date, format: "yyyy-MM-dd")
         let month = DateFormatterManager.shared.string(from: date, format: "M")
         let day = DateFormatterManager.shared.string(from: date, format: "d")
         monthLabel.text = "\(month)월"
@@ -404,11 +418,6 @@ class TodoDetailViewController: UIViewController, FSCalendarDelegate, FSCalendar
         dayLabel.text = "\(dateFormatter.string(from: sender.date))일"
        // print("날짜 선택 \(monthLabel.text) ")
     }
-    
-    @objc func textFieldDidChangeSelection(_ textField: UITextField){
-        updateButtonState()
-    }
-    
     
     @objc func saveTodo() {
         guard let todo = todoName.text, !todo.isEmpty else { return }

@@ -178,16 +178,24 @@ class DeleteMemberViewController: UIViewController{
     }
     
     @objc func deleteButtonTapped() {
-        Task {
-            do{
-                let result = try await TokenAPI.shared.deleteMember()
-                print("Successed Delete Member : \(result)")
-            }catch {
-                print("Failed Delete Member")
+        let mainVC = MainViewController()
+        let navController = UINavigationController(rootViewController: mainVC)
+        navController.modalPresentationStyle = .fullScreen
+        self.present(navController, animated: true, completion: nil)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            Task {
+                do {
+                    let result = try await TokenAPI.shared.deleteMember()
+                    print("Successed Delete Member: \(result)")
+                    NotificationCenter.default.post(name: NSNotification.Name("MemberDeleted"), object: nil)
+                } catch {
+                    print("Failed Delete Member")
+                    NotificationCenter.default.post(name: NSNotification.Name("MemberDeleted"), object: nil)
+                }
+                // Dismiss the current view controller after the task completes
+                self.dismiss(animated: false, completion: nil)
             }
         }
-        let mainVC = MainViewController()
-        navigationController?.pushViewController(mainVC, animated: true)
-        
     }
 }

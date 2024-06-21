@@ -122,6 +122,13 @@ final class CategoryDetailViewController: UIViewController {
         didSelectCategory()
         
         NotificationCenter.default.addObserver(self, selector: #selector(categoryDeleted), name: NSNotification.Name( "CategoryDeleted"), object: nil)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func dismissKeyboard() {
+        self.view.endEditing(true)
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -393,6 +393,7 @@ final class TodoViewController: UIViewController, FSCalendarDelegate, FSCalendar
         monthLabel.text = "\(month)월"
         dayLabel.text = "\(day)일"
         filterTodos()
+        updateEventDates()
         updateEmptyState()
     }
     
@@ -467,6 +468,7 @@ final class TodoViewController: UIViewController, FSCalendarDelegate, FSCalendar
             }
         }
         todoView.reloadData()
+        filterTodos()
         updateEmptyState()
        }
     

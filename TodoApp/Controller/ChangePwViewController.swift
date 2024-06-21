@@ -13,19 +13,22 @@ class ChangePwViewController: UIViewController, UITextFieldDelegate {
     // 라벨
     private lazy var pwLabel: UILabel = {
         let label = UILabel()
-        label.text = "현재 비밀번호"
+        label.text = "비밀번호"
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
     private lazy var changePwLabel: UILabel = {
         let label = UILabel()
         label.text = "변경 비밀번호"
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
     private lazy var checkPwLabel: UILabel = {
         let label = UILabel()
         label.text = "변경 비밀번호 확인"
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
@@ -33,7 +36,7 @@ class ChangePwViewController: UIViewController, UITextFieldDelegate {
     private lazy var pwTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = UIColor.grayBackgroud
-        textField.placeholder = " 현재 비밀번호를 입력해주세요"
+        textField.placeholder = " 현재 비밀번호를 입력해주세요."
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.borderStyle = .none
         textField.layer.cornerRadius = 10
@@ -56,7 +59,7 @@ class ChangePwViewController: UIViewController, UITextFieldDelegate {
     private lazy var changePwTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = UIColor.grayBackgroud
-        textField.placeholder =  " 변경할 비밀번호를 입력해주세요"
+        textField.placeholder =  " 비밀번호를 입력해주세요."
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.borderStyle = .none
         textField.layer.cornerRadius = 10
@@ -80,7 +83,7 @@ class ChangePwViewController: UIViewController, UITextFieldDelegate {
     private lazy var checkpwTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = UIColor.grayBackgroud
-        textField.placeholder = " 변경할 비밀번호를 입력해주세요"
+        textField.placeholder = " 비밀번호를 입력해주세요."
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.borderStyle = .none
         textField.layer.cornerRadius = 10
@@ -111,11 +114,11 @@ class ChangePwViewController: UIViewController, UITextFieldDelegate {
     // 비밀번호 변경 버튼
     private lazy var changePwButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setTitle("비밀번호 변경", for: .normal )
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        button.setTitle("변경하기", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor.MainBackground
-        button.layer.cornerRadius = 5
+        button.layer.cornerRadius = 10
         button.clipsToBounds = true
         button.addTarget(self, action: #selector(changePwButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -151,7 +154,7 @@ class ChangePwViewController: UIViewController, UITextFieldDelegate {
             make.top.equalTo(pwLabel.snp.bottom).offset(8)
             make.leading.equalTo(pwLabel)
             make.trailing.equalToSuperview().offset(-30)
-            make.height.equalTo(40)
+            make.height.equalTo(50)
         }
         
         changePwLabel.snp.makeConstraints { make in
@@ -179,10 +182,10 @@ class ChangePwViewController: UIViewController, UITextFieldDelegate {
         }
         
         changePwButton.snp.makeConstraints { make in
-            make.top.equalTo(checkpwTextField.snp.bottom).offset(20)
+            make.top.equalTo(checkpwTextField.snp.bottom).offset(40)
             make.leading.equalToSuperview().offset(30)
             make.trailing.equalToSuperview().offset(-30)
-            make.height.equalTo(50)
+            make.height.equalTo(60)
         }
     }
     
@@ -307,12 +310,13 @@ class ChangePwViewController: UIViewController, UITextFieldDelegate {
         Task {
             do {
                 // 비밀번호 변경 요청
-                let changePasswordRequest = ChangePw(userPw: currentPw, changePw: newPw, confirmChangePw: confirmPw)
-                let changePasswordResponse = try await FetchAPI.shared.changePassword(data: changePasswordRequest)
-                print("Password Change Success: \(ChangePwResponse)")
+                let changePasswordRequest = ChangePwRequest(userPw: currentPw, changePw: newPw, confirmChangePw: confirmPw)
+                _ = try await TokenAPI.shared.changePw(data: changePasswordRequest)
+                print("Password Change Success: \(ChangePwResponse.self)")
 
-                showAlert(message: "비밀번호가 성공적으로 변경되었습니다.")
-                
+                showAlert(message: "비밀번호가 성공적으로 변경되었습니다.") {
+                    self.navigationController?.popViewController(animated: true)
+                }
             } catch {
                 showAlert(message: "비밀번호 변경에 실패하였습니다.")
                 print("Failed to change password: \(error)")
@@ -320,9 +324,11 @@ class ChangePwViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    private func showAlert(message: String) {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+    private func showAlert(message: String, completion: (() -> Void)? = nil) {
+        let alert = UIAlertController(title: "알림", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            completion?()
+        })
         present(alert, animated: true, completion: nil)
     }
 }

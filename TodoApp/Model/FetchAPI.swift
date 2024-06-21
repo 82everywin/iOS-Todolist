@@ -49,7 +49,4 @@ class FetchAPI {
     func signUp(data: Signup) async throws -> SignupResponse {
         try await fetchAPI(.signUp(item: data))
     }
-    func changePw(data: ChangePw) async throws -> ChangePwResponse {
-        try await fetchAPI(.changePw(item: data))
-    }
 }

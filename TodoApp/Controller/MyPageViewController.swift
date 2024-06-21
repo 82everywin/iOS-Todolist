@@ -122,9 +122,9 @@ class MyPageViewController: UIViewController {
         changePwBtn.addTarget(self, action: #selector(changePasswordButtonTapped), for: .touchUpInside)
         deleteAccountBtn.addTarget(self, action: #selector(deleteAccountButtonTapped), for: .touchUpInside)
         
-        
         setUpViews()
         getMember()
+      
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -216,6 +216,8 @@ class MyPageViewController: UIViewController {
     
     @objc private func changePasswordButtonTapped() {
         print("Change password button tapped")
+        let changePwVC = ChangePwViewController()
+        navigationController?.pushViewController(changePwVC, animated: true)
     }
     
     @objc private func deleteAccountButtonTapped() {
@@ -224,4 +226,5 @@ class MyPageViewController: UIViewController {
         self.present(alertVC, animated: false, completion: nil)  
     }
     
+ 
 }

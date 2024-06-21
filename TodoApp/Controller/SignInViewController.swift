@@ -127,7 +127,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         }
         
         loginButton.snp.makeConstraints { make in
-            make.top.equalTo(pwTextField.snp.bottom).offset(100)
+            make.top.equalTo(pwTextField.snp.bottom).offset(60)
             make.leading.equalTo(view).offset(25)
             make.trailing.equalTo(view).offset(-25)
             make.height.equalTo(55)
@@ -162,7 +162,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: paddingWidth, height: paddingHeight))
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
-        imageView.frame = CGRect(x: 5, y: 0, width: paddingWidth - 10, height: paddingHeight)
+        imageView.frame = CGRect(x: 10, y: 0, width: paddingWidth - 10, height: paddingHeight)
         leftPaddingView.addSubview(imageView)
         
         textField.leftView = leftPaddingView
@@ -174,7 +174,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: paddingWidth, height: paddingHeight))
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
-        imageView.frame = CGRect(x: -5, y: 0, width: paddingWidth - 10, height: paddingHeight)
+        imageView.frame = CGRect(x: -10, y: 0, width: paddingWidth - 10, height: paddingHeight)
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: selector))
         
@@ -225,9 +225,9 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
             do {
                 let newLogin = SignIn(userId: setUserId, userPw: setUserPw)
                 let SignInResponse = try await FetchAPI.shared.signIn(data: newLogin)
-             
+                print(SignInResponse)
+                TokenAPI.shared.setToken(SignInResponse.token)
                 let todoVC = TodoViewController(accToken: SignInResponse.token)
-
                 navigationController?.pushViewController(todoVC, animated: true)
                 
             } catch {

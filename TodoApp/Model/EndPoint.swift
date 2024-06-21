@@ -28,7 +28,7 @@ enum EndPoint {
     case signUp(item: Signup)
     case getMember
     case deleteMember
-    case changePw(item: ChangePw)
+    case changePw(item: ChangePwRequest)
     
     var path: String {
         switch self {
@@ -51,7 +51,7 @@ enum EndPoint {
         case .signIn(_):
             return "/member/sign-in"
         case .changePw(_):
-            return "/member/change-password"
+            return "/member"
         case .getMember, .deleteMember:
             return "/member"
         }
@@ -64,11 +64,11 @@ enum EndPoint {
     
     var method: String {
         switch self {
-        case .addTodo, .addCategory, .signIn, .signUp, .changePw:
+        case .addTodo, .addCategory, .signIn, .signUp:
             return "POST"
         case .getTodo, .getCategory, .getMember:
             return "GET"
-        case .updateTodo, .updateCategory:
+        case .updateTodo, .updateCategory, .changePw:
             return "PUT"
         case .deleteTodo, .deleteCategory, .deleteMember:
             return "DELETE"
