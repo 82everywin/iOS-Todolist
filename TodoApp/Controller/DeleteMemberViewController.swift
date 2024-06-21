@@ -44,6 +44,7 @@ class DeleteMemberViewController: UIViewController{
        let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.textColor = UIColor.black
         label.numberOfLines = 1
         return label
     }()
@@ -51,6 +52,7 @@ class DeleteMemberViewController: UIViewController{
     private let messageLabel: UILabel = {
         let label = UILabel()
         label.text = "정말 계정을 삭제하실건가요?"
+        label.textColor = UIColor.black
         label.textAlignment = .center
         return label
     }()
@@ -175,18 +177,25 @@ class DeleteMemberViewController: UIViewController{
         self.dismiss(animated: false, completion: nil)
     }
     
-    @objc func deleteButtonTapped() async {
-        Task {
-            do{
-                let result = try await TokenAPI.shared.deleteMember()
-                print("Successed Delete Member : \(result)")
-                
-            }catch {
-                print("Failed Delete Member")
+    @objc func deleteButtonTapped() {
+        let mainVC = MainViewController()
+        let navController = UINavigationController(rootViewController: mainVC)
+        navController.modalPresentationStyle = .fullScreen
+        self.present(navController, animated: true, completion: nil)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            Task {
+                do {
+                    let result = try await TokenAPI.shared.deleteMember()
+                    print("Successed Delete Member: \(result)")
+                    NotificationCenter.default.post(name: NSNotification.Name("MemberDeleted"), object: nil)
+                } catch {
+                    print("Failed Delete Member")
+                    NotificationCenter.default.post(name: NSNotification.Name("MemberDeleted"), object: nil)
+                }
+                // Dismiss the current view controller after the task completes
+                self.dismiss(animated: false, completion: nil)
             }
         }
-        let mainVC = MainViewController()
-        navigationController?.pushViewController(mainVC, animated: true)
-        
     }
 }

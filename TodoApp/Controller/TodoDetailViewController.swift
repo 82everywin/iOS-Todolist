@@ -6,13 +6,15 @@
 //
 import UIKit
 import SnapKit
+import FSCalendar
 
-class TodoDetailViewController: UIViewController {
+class TodoDetailViewController: UIViewController, FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
     
     var categories: [CategoryResponse] = []
     var selectedCategoryIndex: Int?
     var selectedTodo : TodoResponse?
     var selectedCategory: CategoryResponse?
+    var onTodoAdded: (() -> Void)?
 
     var choiceCategory: CategoryTodoRequest = CategoryTodoRequest(categoryId: 0)
     var categoryRequest: CategoryRequest = CategoryRequest(content: "", color: "")
@@ -20,6 +22,7 @@ class TodoDetailViewController: UIViewController {
     var currentMonth = Calendar.current.component(.month, from: Date())
     var currentDay = Calendar.current.component(.day, from: Date())
     
+    var eventDates: [Date] = []
     var selectDate: String?
     
     private let monthLabel: UILabel = {
@@ -130,6 +133,23 @@ class TodoDetailViewController: UIViewController {
         return button
     }()
     
+    private let calendarView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        return view
+    }()
+    
+    private let calendar: FSCalendar = {
+        let calendar = FSCalendar()
+        calendar.scope = .month
+        calendar.backgroundColor = .white
+        calendar.layer.cornerRadius = 10
+        calendar.layer.masksToBounds = true
+        return calendar
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -144,6 +164,11 @@ class TodoDetailViewController: UIViewController {
         self.categoryView.delegate = self
         self.categoryView.dataSource = self
         
+        calendarView.isHidden = true
+        calendar.delegate = self
+        calendar.dataSource = self
+        calendar.isHidden = true
+        
         calendarButton.addTarget(self, action: #selector(viewCalendar), for: .touchUpInside)
         todoName.addTarget(self, action: #selector(textFieldDidChangeSelection(_:)), for: .editingChanged)
         saveButton.addTarget(self, action: #selector(saveTodo), for: .touchUpInside)
@@ -152,7 +177,15 @@ class TodoDetailViewController: UIViewController {
         updateMonthLabel()
         updateDayLabel()
         getCategory()
-     //   getTodo()
+        calendarStyle()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func dismissKeyboard() {
+        self.view.endEditing(true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -223,8 +256,8 @@ class TodoDetailViewController: UIViewController {
         
         categoryCollectionView.addSubview(categoryView)
         categoryView.snp.makeConstraints{ make in
-            make.leading.equalTo(categoryCollectionView.snp.leading).offset(5)
-            make.trailing.equalTo(categoryCollectionView.snp.trailing).offset(-5)
+            make.leading.equalTo(categoryCollectionView.snp.leading).offset(10)
+            make.trailing.equalTo(categoryCollectionView.snp.trailing).offset(-10)
             make.centerY.equalTo(categoryCollectionView.snp.centerY)
             make.height.equalTo(60)
         }
@@ -260,6 +293,29 @@ class TodoDetailViewController: UIViewController {
         }
     }
     
+    func calendarStyle() {
+        calendar.locale = Locale(identifier: "ko_KR")
+        calendar.headerHeight = 60
+        calendar.weekdayHeight = 22
+        calendar.appearance.headerMinimumDissolvedAlpha = 0.0
+        calendar.appearance.headerDateFormat = "YYYY년 M월"
+        calendar.appearance.headerTitleColor = UIColor.MainBackground
+        calendar.appearance.headerTitleFont = UIFont.boldSystemFont(ofSize: 18)
+        
+        calendar.appearance.weekdayTextColor = UIColor(hexCode: "8E8E8E")
+        calendar.appearance.selectionColor = UIColor(hexCode: "EEF3FF")
+        calendar.appearance.eventSelectionColor = UIColor.MainBackground
+        calendar.appearance.titleWeekendColor = UIColor(hexCode: "232323")
+        calendar.appearance.titleDefaultColor = UIColor(hexCode: "232323")
+        calendar.appearance.titleFont = UIFont.systemFont(ofSize: 12)
+        calendar.appearance.subtitleFont = UIFont.systemFont(ofSize: 10)
+        
+        calendar.appearance.titleTodayColor = UIColor.MainBackground
+        calendar.appearance.todayColor = UIColor(hexCode: "EEF3FF")
+        calendar.appearance.todaySelectionColor = .none
+    }
+    
+    
     func getTodo() {
         if let todo = selectedTodo {
             todoName.text = todo.content
@@ -293,68 +349,75 @@ class TodoDetailViewController: UIViewController {
     }
     
     @objc func textFieldDidChangeSelection(_ textField: UITextField){
-        updateButtonState()
+           updateButtonState()
     }
     
     @objc func viewCalendar() {
-        let picker = UIDatePicker()
-        picker.preferredDatePickerStyle = .inline
-        picker.datePickerMode = .date
-        picker.locale = Locale(identifier: "ko-KR")
-        picker.backgroundColor = .white
-        picker.tintColor = UIColor.MainBackground
-        if #available(iOS 14.0, *) {
-               picker.overrideUserInterfaceStyle = .light  
-            // 이 설정은 모든 텍스트와 배경을 라이트 모드로 강제합니다.
-        }
-        picker.layer.cornerRadius = 10
-        picker.layer.masksToBounds = true
-        picker.addTarget(self, action: #selector(changeDate(sender:)), for: UIControl.Event.valueChanged)
-        
-        let pickerWrapper = UIView()
-        pickerWrapper.backgroundColor = .white
-        pickerWrapper.layer.cornerRadius = 10
-        pickerWrapper.layer.masksToBounds = true
-        pickerWrapper.addSubview(picker)
-        
+        calendar.isHidden = false
+        calendarView.isHidden = false
+            
         let dimmedBackground = UIView()
         dimmedBackground.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         dimmedBackground.frame = self.view.frame
         dimmedBackground.tag = 99
         
+        let calendarView = UIView()
+        calendarView.backgroundColor = .white
+        calendarView.layer.cornerRadius = 10
+        calendarView.layer.masksToBounds = true
+         
         self.view.addSubview(dimmedBackground)
-        self.view.addSubview(pickerWrapper)
-        
-        pickerWrapper.snp.makeConstraints{ make in
-            make.center.equalTo(view)
+        self.view.addSubview(calendarView)
+        calendarView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
             make.width.equalTo(view).multipliedBy(0.9)
-            make.height.equalTo(pickerWrapper.snp.width).multipliedBy(1.2)
+            make.height.equalTo(calendarView.snp.width).multipliedBy(1.2)
         }
-        
-        picker.snp.makeConstraints{ make in
-            make.edges.equalTo(pickerWrapper).inset(10)
+     
+        calendarView.addSubview(calendar)
+        calendar.snp.makeConstraints{ make in
+            make.edges.equalToSuperview().inset(20)
+         
         }
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissDatePicker))
+         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissCalendar))
         dimmedBackground.addGestureRecognizer(tapGesture)
     }
     
-    @objc func dismissDatePicker(){
-        self.view.viewWithTag(99)?.removeFromSuperview()
-        self.view.subviews.last?.removeFromSuperview()
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        selectDate = DateFormatterManager.shared.string(from: date, format: "yyyy-MM-dd")
+        let month = DateFormatterManager.shared.string(from: date, format: "M")
+        let day = DateFormatterManager.shared.string(from: date, format: "d")
+        monthLabel.text = "\(month)월"
+        dayLabel.text = "\(day)일"
     }
     
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+        return self.eventDates.contains(date) ? 1 : 0
+        
+    }
+    
+    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, fillSelectionColorFor date: Date) -> UIColor? {
+        return UIColor.MainBackground
+    }
+    
+    @objc func dismissCalendar() {
+    
+        self.view.viewWithTag(99)?.removeFromSuperview()
+        self.view.subviews.last?.removeFromSuperview()
+        calendar.isHidden = true
+    }
+    
+
     @objc func changeDate(sender: UIDatePicker){
-        let dateFormatter = DateFormatter()
+       let dateFormatter = DateFormatter()
         dateFormatter.timeZone = TimeZone.current
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        selectDate = dateFormatter.string(from: sender.date)
         dateFormatter.dateFormat = "M"
         monthLabel.text = "\(dateFormatter.string(from: sender.date))월"
         dateFormatter.dateFormat = "d"
         dayLabel.text = "\(dateFormatter.string(from: sender.date))일"
+       // print("날짜 선택 \(monthLabel.text) ")
     }
-    
     
     @objc func saveTodo() {
         guard let todo = todoName.text, !todo.isEmpty else { return }
@@ -363,10 +426,10 @@ class TodoDetailViewController: UIViewController {
             do {
                 if selectedTodo != nil {
                     let newTodo = UpdateTodoRequest(content: todo, checked: selectedTodo!.checked, setDate: selectDate!, categoryId: choiceCategory.categoryId)
-                    let updateTodo = try await TokenAPI.shared.updateTodo(todoId: selectedTodo!.todoId, todo: newTodo)
+                    _ = try await TokenAPI.shared.updateTodo(todoId: selectedTodo!.todoId, todo: newTodo)
                 } else {
                     let newTodo = TodoRequest(content: todo, setDate: selectDate!, categoryId: choiceCategory.categoryId)
-                    let addTodo = try await TokenAPI.shared.addTodo(todo: newTodo)
+                    _ = try await TokenAPI.shared.addTodo(todo: newTodo)
                 }
                 navigationController?.popViewController(animated: true)
                 

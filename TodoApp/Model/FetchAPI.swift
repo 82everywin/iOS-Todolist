@@ -18,7 +18,6 @@ class FetchAPI {
         guard let url = endpoint.url else {
             throw FetchError.invalidURL
         }
-        print(url)
         var request  = URLRequest(url : url)
         request.httpMethod = endpoint.method
         if let body = endpoint.body {
@@ -27,12 +26,9 @@ class FetchAPI {
         }
         
         let (data, response) = try await URLSession.shared.data(for: request)
-        
-        //상태 가져오기
         guard let httpResponse = response as? HTTPURLResponse else {
             throw FetchError.invalidResponse
         }
-        
         switch httpResponse.statusCode {
         case 200...300 :
             let result = try JSONDecoder().decode(T.self, from: data)
@@ -52,8 +48,5 @@ class FetchAPI {
     }
     func signUp(data: Signup) async throws -> SignupResponse {
         try await fetchAPI(.signUp(item: data))
-    }
-    func changePw(data: ChangePw) async throws -> ChangePwResponse {
-        try await fetchAPI(.changePw(item: data))
     }
 }

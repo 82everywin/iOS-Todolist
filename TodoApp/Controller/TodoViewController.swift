@@ -6,8 +6,9 @@
 //
 import UIKit
 import SnapKit
+import FSCalendar
 
-final class TodoViewController: UIViewController {
+final class TodoViewController: UIViewController, FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance{
     
     var accToken: String
     
@@ -22,8 +23,13 @@ final class TodoViewController: UIViewController {
     
     var categories: [CategoryResponse] = []
     var todos: [TodoResponse] = []
+    var allTodos: [TodoResponse] = []
+    
     var currentMonth: Int = Calendar.current.component(.month, from: Date())
     var currentDay: Int = Calendar.current.component(.day, from: Date())
+    var selectedDates: [Date] = []
+    var eventDates: [Date] = []
+    var filteredDate: Date?
     
     private let logoImage: UIImageView = {
         let image = UIImageView()
@@ -88,11 +94,6 @@ final class TodoViewController: UIViewController {
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor(hexCode: "EAEAEA").cgColor
         view.layer.cornerRadius = 10
-//        view.layer.shadowColor = UIColor(hexCode: "000000").cgColor
-//        view.layer.masksToBounds = false
-//        view.layer.shadowOffset = CGSize(width: 2, height: 4)
-//        view.layer.shadowOpacity = 0.3
-//        view.layer.shadowRadius = 5
         return view
     }()
     
@@ -115,15 +116,28 @@ final class TodoViewController: UIViewController {
     
     private let addTodoButton: UIButton = {
        let button = UIButton()
-        button.setTitle("TodoList 추가", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-        button.backgroundColor = UIColor.grayBackgroud
-        button.setTitleColor(UIColor(hexCode: "A2A2A2"), for: .normal)
+        button.setImage(UIImage(named: "addTodo"), for: .normal)
         button.layer.cornerRadius = 10
         return button
     }()
     
- 
+    private let calendarView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        return view
+    }()
+    
+    private let calendar: FSCalendar = {
+        let calendar = FSCalendar()
+        calendar.scope = .month
+        calendar.backgroundColor = .white
+        calendar.layer.cornerRadius = 10
+        calendar.layer.masksToBounds = true
+        return calendar
+    }()
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -136,16 +150,30 @@ final class TodoViewController: UIViewController {
         self.todoView.delegate = self
         self.todoView.dataSource = self
         
+        calendarView.isHidden = true
+        calendar.delegate = self
+        calendar.dataSource = self
+        calendar.isHidden = true
+        
         menuButton.addTarget(self, action: #selector(goToMypage), for: .touchUpInside)
         calendarButton.addTarget(self, action: #selector(viewCalendar), for: .touchUpInside)
         addCategoryBtn.addTarget(self, action: #selector(addCategory), for: .touchUpInside)
-        
         addTodoButton.addTarget(self, action: #selector(addTodo), for: .touchUpInside)
+        
+        let leftSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(leftHandleSwipeGesture(_:)))
+        leftSwipeGestureRecognizer.direction = .left
+        todoView.addGestureRecognizer(leftSwipeGestureRecognizer)
+        
+        let rightSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(rightHandleSwipeGesture(_:)))
+        rightSwipeGestureRecognizer.direction = .right
+        todoView.addGestureRecognizer(rightSwipeGestureRecognizer)
+        
         
         setUpViews()
         updateMonthLabel()
         updateDayLabel()
         getCategoryTodo()
+        calendarStyle()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -156,6 +184,9 @@ final class TodoViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         getCategoryTodo()
+        filterTodos()
+        todoView.reloadData()
+        updateEmptyState()
     }
     
     
@@ -221,11 +252,10 @@ final class TodoViewController: UIViewController {
         self.todoView.snp.makeConstraints{ make in
             make.top.equalTo(dayLabel.snp.bottom).offset(10)
             make.leading.equalTo(view).offset(30)
-            make.trailing.equalTo(view).offset(-30)
+            make.trailing.equalTo(view).offset(-20)
             make.bottom.equalTo(totalTodoView.snp.bottom).offset(-10)
         }
-    
-        
+
         self.view.addSubview(addTodoButton)
         self.addTodoButton.snp.makeConstraints{ make in
             make.top.equalTo(totalTodoView.snp.bottom).offset(20)
@@ -233,6 +263,7 @@ final class TodoViewController: UIViewController {
             make.trailing.equalTo(view).offset(-15)
             make.height.equalTo(60)
         }
+       
     }
     
     func updateMonthLabel(){
@@ -243,55 +274,148 @@ final class TodoViewController: UIViewController {
         dayLabel.text = "\(currentDay)일"
     }
     
+    func calendarStyle() {
+        calendar.locale = Locale(identifier: "ko_KR")
+        calendar.headerHeight = 60
+        calendar.weekdayHeight = 22
+        calendar.appearance.headerMinimumDissolvedAlpha = 0.0
+        calendar.appearance.headerDateFormat = "YYYY년 M월"
+        calendar.appearance.headerTitleColor = UIColor.MainBackground
+        calendar.appearance.headerTitleFont = UIFont.boldSystemFont(ofSize: 18)
+        
+        calendar.appearance.weekdayTextColor = UIColor(hexCode: "8E8E8E")
+        calendar.appearance.selectionColor = UIColor(hexCode: "EEF3FF")
+        calendar.appearance.eventSelectionColor = UIColor.MainBackground
+        calendar.appearance.titleWeekendColor = UIColor(hexCode: "232323")
+        calendar.appearance.titleDefaultColor = UIColor(hexCode: "232323")
+        calendar.appearance.titleFont = UIFont.systemFont(ofSize: 12)
+        calendar.appearance.subtitleFont = UIFont.systemFont(ofSize: 10)
+        
+        calendar.appearance.titleTodayColor = UIColor.MainBackground
+        calendar.appearance.todayColor = UIColor(hexCode: "EEF3FF")
+        calendar.appearance.todaySelectionColor = .none
+    }
+    
+    func getCategoryTodo() {
+        Task {
+            do {
+                self.categories = try await TokenAPI.shared.getCategory()
+                self.todos = try await TokenAPI.shared.getTodo()
+                self.allTodos = todos
+                filterTodos()
+                self.categoryView.reloadData()
+                self.todoView.reloadData()
+                self.updateEventDates()
+                updateEmptyState()
+            }catch {
+                print("Failed to Fetch API data: \(error)")
+            }
+        }
+    }
+    
+    func updateEmptyState() {
+        if todos.isEmpty {
+              let emptyLabel = UILabel()
+              emptyLabel.text = "Todo일정을 추가해보세요!"
+              emptyLabel.textColor = .gray
+              emptyLabel.textAlignment = .center
+              emptyLabel.tag = 999 // 고유 태그
+              emptyLabel.frame = todoView.bounds
+              todoView.backgroundView = emptyLabel
+          } else {
+              todoView.backgroundView = nil
+          }
+    }
+    
+    func updateEventDates() {
+        for todo in allTodos {
+            if let date = DateFormatterManager.shared.date(from: todo.setDate, format: "YYYY-MM-dd"){
+                eventDates.append(date)
+            }
+        }
+        calendar.reloadData()
+    }
+    
+    func filterTodos() {
+        guard let filteredDate = filteredDate else {
+            allTodos = todos
+            return
+        }
+        print("allTodos :\(allTodos)")
+        print("todos: \(todos)")
+        let dateString = DateFormatterManager.shared.string(from: filteredDate, format: "yyyy-MM-dd")
+        print(dateString)
+        self.todos = self.allTodos.filter{ todo in
+            todo.setDate == dateString
+        }
+        print("filtered Todos ===> \(todos)")
+        todoView.reloadData()
+        updateEmptyState()
+    }
+    
     
     @objc func viewCalendar() {
-        let picker = UIDatePicker()
-        picker.preferredDatePickerStyle = .inline
-        picker.datePickerMode = .date
-        picker.locale = Locale(identifier: "ko-KR")
-        picker.backgroundColor = .white
-       
-        picker.tintColor = UIColor(hexCode: "4260FF")
-        if #available(iOS 14.0, *) {
-               picker.overrideUserInterfaceStyle = .light  // 이 설정은 모든 텍스트와 배경을 라이트 모드로 강제합니다.
-        }
-        picker.layer.cornerRadius = 10
-        picker.layer.masksToBounds = true
-        picker.addTarget(self, action: #selector(changeDate(sender:)), for: UIControl.Event.valueChanged)
-        
-        let pickerWrapper = UIView()
-        pickerWrapper.backgroundColor = .white
-        pickerWrapper.layer.cornerRadius = 10
-        pickerWrapper.layer.masksToBounds = true
-        pickerWrapper.addSubview(picker)
-        
+        calendar.isHidden = false
+        calendarView.isHidden = false
+            
         let dimmedBackground = UIView()
         dimmedBackground.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         dimmedBackground.frame = self.view.frame
         dimmedBackground.tag = 99
         
+        let calendarView = UIView()
+        calendarView.backgroundColor = .white
+        calendarView.layer.cornerRadius = 10
+        calendarView.layer.masksToBounds = true
+         
         self.view.addSubview(dimmedBackground)
-        self.view.addSubview(pickerWrapper)
-        
-        pickerWrapper.snp.makeConstraints{ make in
-            make.center.equalTo(view)
+        self.view.addSubview(calendarView)
+        calendarView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
             make.width.equalTo(view).multipliedBy(0.9)
-            make.height.equalTo(pickerWrapper.snp.width).multipliedBy(1.2)
+            make.height.equalTo(calendarView.snp.width).multipliedBy(1.2)
         }
-        
-        picker.snp.makeConstraints{ make in
-            make.edges.equalTo(pickerWrapper).inset(10)
+     
+        calendarView.addSubview(calendar)
+        calendar.snp.makeConstraints{ make in
+            make.edges.equalToSuperview().inset(20)
+         
         }
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissDatePicker))
+         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissCalendar))
         dimmedBackground.addGestureRecognizer(tapGesture)
     }
     
-    @objc func dismissDatePicker(){
-        self.view.viewWithTag(99)?.removeFromSuperview()
-        self.view.subviews.last?.removeFromSuperview()
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        filteredDate = date
+        let month = DateFormatterManager.shared.string(from: date, format: "M")
+        let day = DateFormatterManager.shared.string(from: date, format: "d")
+        monthLabel.text = "\(month)월"
+        dayLabel.text = "\(day)일"
+        filterTodos()
+        updateEventDates()
+        updateEmptyState()
     }
     
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+        return self.eventDates.contains(date) ? 1 : 0
+        
+    }
+    
+    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, fillSelectionColorFor date: Date) -> UIColor? {
+        return UIColor.MainBackground
+    }
+    
+    
+    @objc func dismissCalendar() {
+        selectedDates.removeAll()
+        
+        self.view.viewWithTag(99)?.removeFromSuperview()
+        self.view.subviews.last?.removeFromSuperview()
+        calendar.isHidden = true
+    }
+    
+
     @objc func changeDate(sender: UIDatePicker){
        let dateFormatter = DateFormatter()
         dateFormatter.timeZone = TimeZone.current
@@ -302,21 +426,68 @@ final class TodoViewController: UIViewController {
        // print("날짜 선택 \(monthLabel.text) ")
     }
     
-    func getCategoryTodo() {
-        Task {
-            do {
-                self.categories = try await TokenAPI.shared.getCategory()
-                self.todos = try await TokenAPI.shared.getTodo()
-                self.categoryView.reloadData()
-                self.todoView.reloadData()
-
-            }catch {
-                print("Failed to Fetch API data: \(error)")
+    @objc func leftHandleSwipeGesture(_ gesture: UISwipeGestureRecognizer){
+        let location = gesture.location(in: todoView)
+        if let indexPath = todoView.indexPathForItem(at: location) {
+            let cell = todoView.cellForItem(at: indexPath) as! TodoViewCell
+            cell.deleteButton.isHidden = false
+            UIView.animate(withDuration: 0.6) {
+                cell.contentView.frame.origin.x = -60
             }
         }
     }
     
+    @objc func rightHandleSwipeGesture(_ gesture: UISwipeGestureRecognizer){
+        let location = gesture.location(in: todoView)
+        if let indexPath = todoView.indexPathForItem(at: location) {
+            print("Swiped item Num. \(indexPath)")
+            let cell = todoView.cellForItem(at: indexPath) as! TodoViewCell
+            if( cell.deleteButton.isHidden == false){
+                UIView.animate(withDuration: 0.5) {
+                    cell.contentView.frame.origin.x = 0
+                }
+                cell.deleteButton.isHidden = true
+            }
+        }
+    }
+    
+    @objc func deleteButtonTapped(_ sender: UIButton) {
+        let index = sender.tag
+        Task{
+            do {
+                let msg = try await TokenAPI.shared.deleteTodo(todoId: todos[index].todoId )
+                print("Successed Delete Todo: \(msg)")
+                DispatchQueue.main.async {
+                    self.todos.remove(at: index)
+                    self.todoView.reloadData()
+                    self.updateEmptyState()
+                }
+            }
+            catch{
+                print("Failed Delete Todo")
+            }
+        }
+        todoView.reloadData()
+        filterTodos()
+        updateEmptyState()
+       }
+    
+    @objc func addTodo() {
+        let TodoDetailVC = TodoDetailViewController()
+        navigationController?.pushViewController(TodoDetailVC, animated: true)
+    }
+    
+    @objc func addCategory(){
+        let addCateVC = CategoryDetailViewController(accToken: self.accToken)
+        navigationController?.pushViewController(addCateVC, animated: true)
+    }
+    
+    @objc func goToMypage() {
+        let myPageVC = MyPageViewController(accToken: self.accToken)
+        navigationController?.pushViewController(myPageVC, animated: true)
+    }
 }
+
 
 extension TodoViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int { return 1 }
@@ -332,7 +503,6 @@ extension TodoViewController: UICollectionViewDataSource, UICollectionViewDelega
             return todos.count
         }
     }
-        
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == categoryView {
@@ -350,6 +520,8 @@ extension TodoViewController: UICollectionViewDataSource, UICollectionViewDelega
             cell.layer.cornerRadius = 10
             let todo = todos[indexPath.item]
             cell.configure(with: todo)
+            cell.deleteButton.addTarget(self, action: #selector(deleteButtonTapped(_:)), for: .touchUpInside)
+            cell.deleteButton.tag = indexPath.item
             return cell
         }
         
@@ -363,9 +535,11 @@ extension TodoViewController: UICollectionViewDataSource, UICollectionViewDelega
               return CGSize(width: width + 10, height : 28 )
               
           } else {
-              return CGSize(width: collectionView.frame.width, height: 50)
+              return CGSize(width: collectionView.frame.width , height: 50)
           }
       }
+    
+    
     // category
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 5
@@ -383,28 +557,10 @@ extension TodoViewController: UICollectionViewDataSource, UICollectionViewDelega
             navigationController?.pushViewController(categoryVC, animated: true)
         }
         else {
-            let selectedTodo = todos[indexPath.item]
-            let todoDetailVC = TodoDetailViewController()
-            todoDetailVC.selectedTodo = selectedTodo
-            navigationController?.pushViewController(todoDetailVC, animated: true)
+           let selectedTodo = todos[indexPath.item]
+           let todoDetailVC = TodoDetailViewController()
+           todoDetailVC.selectedTodo = selectedTodo
+           navigationController?.pushViewController(todoDetailVC, animated: true)
         }
     }
-    
-    
-    @objc func addTodo() {
-        let TodoDetailVC = TodoDetailViewController()
-        navigationController?.pushViewController(TodoDetailVC, animated: true)
-    }
-    
-    @objc func addCategory(){
-        let addCateVC = CategoryDetailViewController(accToken: self.accToken)
-        navigationController?.pushViewController(addCateVC, animated: true)
-    }
-    
-    @objc func goToMypage() {
-        let myPageVC = MyPageViewController(accToken: self.accToken)
-        navigationController?.pushViewController(myPageVC, animated: true)
-    }
-    
-  
 }

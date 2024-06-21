@@ -58,6 +58,7 @@ class MyPageViewController: UIViewController {
         label.text = "안녕하세요."
         label.textAlignment = .right
         label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = UIColor(hexCode: "232323")
         label.clipsToBounds = true
         return label
     }()
@@ -66,6 +67,7 @@ class MyPageViewController: UIViewController {
         let label = UILabel()
         label.textAlignment = .right
         label.font = UIFont.boldSystemFont(ofSize: 22)
+        label.textColor = UIColor(hexCode: "232323")
         label.clipsToBounds = true
         return label
     }()
@@ -75,6 +77,7 @@ class MyPageViewController: UIViewController {
         label.text = "님!"
         label.textAlignment = .left
         label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = UIColor(hexCode: "232323")
         return label
     }()
     
@@ -119,9 +122,9 @@ class MyPageViewController: UIViewController {
         changePwBtn.addTarget(self, action: #selector(changePasswordButtonTapped), for: .touchUpInside)
         deleteAccountBtn.addTarget(self, action: #selector(deleteAccountButtonTapped), for: .touchUpInside)
         
-        
         setUpViews()
         getMember()
+      
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -213,6 +216,8 @@ class MyPageViewController: UIViewController {
     
     @objc private func changePasswordButtonTapped() {
         print("Change password button tapped")
+        let changePwVC = ChangePwViewController()
+        navigationController?.pushViewController(changePwVC, animated: true)
     }
     
     @objc private func deleteAccountButtonTapped() {
@@ -221,4 +226,5 @@ class MyPageViewController: UIViewController {
         self.present(alertVC, animated: false, completion: nil)  
     }
     
+ 
 }

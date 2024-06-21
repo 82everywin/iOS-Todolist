@@ -48,6 +48,15 @@ final class TodoViewCell: UICollectionViewCell {
         return view
     }()
     
+   let deleteButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("삭제", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UIColor(hexCode: "FF3E3E")
+        button.isHidden = true
+       return button
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpViews()
@@ -78,13 +87,21 @@ final class TodoViewCell: UICollectionViewCell {
         self.todoContainerView.snp.makeConstraints{ make in
             make.leading.equalTo(circleView.snp.trailing).offset(6)
             make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-10)
+            make.width.equalTo(270)
             make.height.equalToSuperview()
         }
         
         todoContainerView.addSubview(todoLabel)
         todoLabel.snp.makeConstraints{ make in
             make.edges.equalTo(todoContainerView).inset(5)
+        }
+        
+        contentView.addSubview(deleteButton)
+        deleteButton.snp.makeConstraints { make in
+            make.top.bottom.equalTo(todoContainerView).inset(5)
+            make.leading.equalTo(todoContainerView.snp.trailing).offset(1)
+            make.width.equalTo(55)
+            
         }
     }
     
@@ -109,7 +126,10 @@ final class TodoViewCell: UICollectionViewCell {
         default:
             todoLabel.backgroundColor = UIColor.white
         }
+        
+        deleteButton.isHidden = true
     }
+    
     
     @objc func tapCircleView(_ sender: UITapGestureRecognizer){
         guard let todo = todo else { return}
@@ -119,16 +139,14 @@ final class TodoViewCell: UICollectionViewCell {
         Task{
             do {
                 let updateTodo = UpdateTodoRequest(content: todo.content, checked: newCheckedState, setDate: todo.setDate, categoryId: todo.category.categoryId)
-                let checkedCircle = try await TokenAPI.shared.updateTodo(todoId: self.todo!.todoId, todo: updateTodo)
-                print("Todo update : \(checkedCircle)")
-                
+                _ = try await TokenAPI.shared.updateTodo(todoId: self.todo!.todoId, todo: updateTodo)
+              
                 self.todo?.checked = newCheckedState
                 updateCheckmarkUI(isChecked: newCheckedState)
             }
             catch{
-                let alert = UIAlertController(title: "Error", message: "Failed to update TOdo", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Error", message: "Failed to update Todo", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-               // present(alert, animated: true, completion: nil )
                 print("Failed to update Todo: \(error)")
             }
         }

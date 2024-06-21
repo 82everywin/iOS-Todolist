@@ -12,18 +12,21 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     private lazy var idLabel: UILabel = {
         let label = UILabel()
         label.text = "아이디"
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
     private lazy var pwLabel: UILabel = {
         let label = UILabel()
         label.text = "비밀번호"
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
     private lazy var checkPwLabel: UILabel = {
         let label = UILabel()
         label.text = "비밀번호 확인"
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
@@ -113,10 +116,10 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     private lazy var signUpButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("회원가입", for: .normal )
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor.MainBackground
-        button.layer.cornerRadius = 5
+        button.layer.cornerRadius = 10
         button.clipsToBounds = true
         button.addTarget(self, action: #selector(signupButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -152,7 +155,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
             make.top.equalTo(idLabel.snp.bottom).offset(8)
             make.leading.equalTo(idLabel)
             make.trailing.equalToSuperview().offset(-30)
-            make.height.equalTo(40)
+            make.height.equalTo(50)
         }
         
         pwLabel.snp.makeConstraints { make in
@@ -180,10 +183,10 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         }
         
         signUpButton.snp.makeConstraints { make in
-            make.top.equalTo(checkpwTextField.snp.bottom).offset(20)
+            make.top.equalTo(checkpwTextField.snp.bottom).offset(50)
             make.leading.equalToSuperview().offset(30)
             make.trailing.equalToSuperview().offset(-30)
-            make.height.equalTo(50)
+            make.height.equalTo(60)
         }
     }
     

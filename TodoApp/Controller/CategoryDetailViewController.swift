@@ -120,6 +120,15 @@ final class CategoryDetailViewController: UIViewController {
         setUpViews()
         setupColorButtons()
         didSelectCategory()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(categoryDeleted), name: NSNotification.Name( "CategoryDeleted"), object: nil)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func dismissKeyboard() {
+        self.view.endEditing(true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -304,6 +313,11 @@ final class CategoryDetailViewController: UIViewController {
                                                    categoryName: categoryName.text!)
         modalVC.modalPresentationStyle = .overFullScreen
         self.present(modalVC, animated: false, completion: nil)
+    }
+    
+    @objc func categoryDeleted() {
+        _ = TodoViewController(accToken: accToken)
+        self.navigationController?.popViewController(animated: true)
     }
 
 }
