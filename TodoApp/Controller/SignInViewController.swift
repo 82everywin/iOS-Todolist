@@ -207,21 +207,27 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         textField.backgroundColor = UIColor.grayBackgroud
         textField.layer.borderColor = UIColor.clear.cgColor
         textField.layer.borderWidth = 0.0
+        textField.textColor = UIColor.thinGray
+        
+        // Revert left image to original
+        if textField == idTextField {
+            addLeftPadding(to: textField, image: UIImage(named: "user")!, paddingWidth: 30, paddingHeight: 20)
+        }
     }
     
     // 로그인 버튼 눌렀을 때 동작 구현
     @objc private func loginButtonTapped() {
         guard let setUserId = idTextField.text,
-                let setUserPw = pwTextField.text
+              let setUserPw = pwTextField.text
         else { return }
-        
-        
+
         Task {
             do {
                 let newLogin = SignIn(userId: setUserId, userPw: setUserPw)
                 let SignInResponse = try await FetchAPI.shared.signIn(data: newLogin)
-                TokenAPI.shared.setToken(SignInResponse.token)
+             
                 let todoVC = TodoViewController(accToken: SignInResponse.token)
+
                 navigationController?.pushViewController(todoVC, animated: true)
                 
             } catch {

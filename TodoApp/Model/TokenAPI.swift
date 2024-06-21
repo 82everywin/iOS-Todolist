@@ -20,7 +20,7 @@ class TokenAPI {
         self.token = token
     }
     
-
+    
     func tokenAPI<T: Decodable> (_ endpoint: EndPoint) async throws -> T {
         guard let url = endpoint.url else {
             throw FetchError.invalidURL
@@ -34,7 +34,7 @@ class TokenAPI {
         }
         
         request.setValue("Bearer \(self.token)", forHTTPHeaderField: "Authorization")
-    
+        
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
@@ -54,7 +54,7 @@ class TokenAPI {
         default :
             throw FetchError.statuscodeError(httpResponse.statusCode)
         }
-
+        
     }
     
     
