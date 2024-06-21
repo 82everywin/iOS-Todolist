@@ -37,6 +37,7 @@
 		8BBC51D32C025E24005EB184 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBC51D22C025E24005EB184 /* Todo.swift */; };
 		8BBC51D72C025FB9005EB184 /* FetchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBC51D62C025FB9005EB184 /* FetchAPI.swift */; };
 		B2FD66DC2C252484004B428D /* ChangePwViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FD66DB2C252484004B428D /* ChangePwViewController.swift */; };
+		B2FD66DE2C252CE4004B428D /* ChangePw.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FD66DD2C252CE4004B428D /* ChangePw.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,7 @@
 		93062E8C3F3BF402BD77273D /* Pods-TodoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodoApp.release.xcconfig"; path = "Target Support Files/Pods-TodoApp/Pods-TodoApp.release.xcconfig"; sourceTree = "<group>"; };
 		9C352714C3CB4FD7FC1E50A6 /* Pods-TodoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodoApp.debug.xcconfig"; path = "Target Support Files/Pods-TodoApp/Pods-TodoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		B2FD66DB2C252484004B428D /* ChangePwViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePwViewController.swift; sourceTree = "<group>"; };
+		B2FD66DD2C252CE4004B428D /* ChangePw.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChangePw.swift; path = "../../../../../Desktop/iOS-Todolist/TodoApp/Model/ChangePw.swift"; sourceTree = "<group>"; };
 		DA35A18F6F6FB52952526208 /* Pods_TodoApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TodoApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -161,6 +163,7 @@
 				8B8725652C087DBB00E2B9F8 /* EndPoint.swift */,
 				8BBC51D62C025FB9005EB184 /* FetchAPI.swift */,
 				8B95FA922C1E9AC100C4CB83 /* TokenAPI.swift */,
+				B2FD66DD2C252CE4004B428D /* ChangePw.swift */,
 				8B95FA902C1E8D6500C4CB83 /* Msg.swift */,
 				8B6DB39F2C101BD800804DE9 /* SignIn.swift */,
 				8B6DB3A12C10490500804DE9 /* SignUp.swift */,
@@ -308,6 +311,7 @@
 				8B87255E2C027E5B00E2B9F8 /* Category.swift in Sources */,
 				8B5C74FF2C241E42001D7BAD /* Member.swift in Sources */,
 				8BBC51D72C025FB9005EB184 /* FetchAPI.swift in Sources */,
+				B2FD66DE2C252CE4004B428D /* ChangePw.swift in Sources */,
 				8B8725602C05DB5900E2B9F8 /* AddCategoryCell.swift in Sources */,
 				8B6BE3EF2C1F614000BAC74D /* DateFormatterManager.swift in Sources */,
 				8B95FA8F2C1E874300C4CB83 /* CustomLabel.swift in Sources */,
