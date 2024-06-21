@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 enum FetchError: Error {
     case invalidURL
     case invalidResponse
@@ -18,7 +17,7 @@ enum FetchError: Error {
 
 enum EndPoint {
     case getTodo
-    case addTodo( item: TodoRequest)
+    case addTodo(item: TodoRequest)
     case updateTodo(todoId: Int, item: UpdateTodoRequest)
     case deleteTodo(todoId: Int)
     case addCategory(item: CategoryRequest)
@@ -29,37 +28,30 @@ enum EndPoint {
     case signUp(item: Signup)
     case getMember
     case deleteMember
+    case changePw(item: ChangePw)
     
     var path: String {
-      
-        switch self{
-            
+        switch self {
         case .addTodo(_):
             return "/todo"
-            
         case .getTodo:
             return "/todo/todos"
-            
-        case .updateTodo(let todoId, _), 
-                .deleteTodo(let todoId):
+        case .updateTodo(let todoId, _),
+             .deleteTodo(let todoId):
             return "/todo/\(todoId)"
-            
         case .getCategory:
             return "/category/categories"
-            
         case .addCategory(_):
             return "/category"
-            
         case .updateCategory(let categoryId, _),
-                .deleteCategory(let categoryId):
+             .deleteCategory(let categoryId):
             return "/category/\(categoryId)"
-            
         case .signUp(_):
             return "/member/sign-up"
-            
         case .signIn(_):
             return "/member/sign-in"
-        
+        case .changePw(_):
+            return "/member/change-password"
         case .getMember, .deleteMember:
             return "/member"
         }
@@ -72,24 +64,24 @@ enum EndPoint {
     
     var method: String {
         switch self {
-        case .addTodo, .addCategory, .signIn, .signUp :
+        case .addTodo, .addCategory, .signIn, .signUp, .changePw:
             return "POST"
-        case .getTodo, .getCategory, .getMember :
+        case .getTodo, .getCategory, .getMember:
             return "GET"
-        case .updateTodo, .updateCategory :
+        case .updateTodo, .updateCategory:
             return "PUT"
-        case .deleteTodo, .deleteCategory, .deleteMember :
+        case .deleteTodo, .deleteCategory, .deleteMember:
             return "DELETE"
         }
     }
     
     var body: Data? {
         switch self {
-        case .addTodo( let item):
+        case .addTodo(let item):
             return try? JSONEncoder().encode(item)
-        case .updateTodo(_,let item):
+        case .updateTodo(_, let item):
             return try? JSONEncoder().encode(item)
-        case .addCategory( let category):
+        case .addCategory(let category):
             return try? JSONEncoder().encode(category)
         case .updateCategory(_, let category):
             return try? JSONEncoder().encode(category)
@@ -97,9 +89,10 @@ enum EndPoint {
             return try? JSONEncoder().encode(item)
         case .signUp(let item):
             return try? JSONEncoder().encode(item)
-        default :
+        case .changePw(let item):
+            return try? JSONEncoder().encode(item)
+        default:
             return nil
         }
     }
 }
-
