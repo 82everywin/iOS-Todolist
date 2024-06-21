@@ -36,6 +36,7 @@
 		8BBC51D12C020748005EB184 /* TodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBC51D02C020748005EB184 /* TodoViewController.swift */; };
 		8BBC51D32C025E24005EB184 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBC51D22C025E24005EB184 /* Todo.swift */; };
 		8BBC51D72C025FB9005EB184 /* FetchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBC51D62C025FB9005EB184 /* FetchAPI.swift */; };
+		B2FD66DC2C252484004B428D /* ChangePwViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FD66DB2C252484004B428D /* ChangePwViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,7 @@
 		8BBC51D62C025FB9005EB184 /* FetchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAPI.swift; sourceTree = "<group>"; };
 		93062E8C3F3BF402BD77273D /* Pods-TodoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodoApp.release.xcconfig"; path = "Target Support Files/Pods-TodoApp/Pods-TodoApp.release.xcconfig"; sourceTree = "<group>"; };
 		9C352714C3CB4FD7FC1E50A6 /* Pods-TodoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodoApp.debug.xcconfig"; path = "Target Support Files/Pods-TodoApp/Pods-TodoApp.debug.xcconfig"; sourceTree = "<group>"; };
+		B2FD66DB2C252484004B428D /* ChangePwViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePwViewController.swift; sourceTree = "<group>"; };
 		DA35A18F6F6FB52952526208 /* Pods_TodoApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TodoApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -145,6 +147,7 @@
 				8B5C75002C243188001D7BAD /* DeleteMemberViewController.swift */,
 				8B8725612C05DD1A00E2B9F8 /* CategoryDetailViewController.swift */,
 				8B8725632C0677FF00E2B9F8 /* TodoDetailViewController.swift */,
+				B2FD66DB2C252484004B428D /* ChangePwViewController.swift */,
 				8B6DB3952C0F055200804DE9 /* SignupViewController.swift */,
 				8B6DB39B2C0F05BA00804DE9 /* SignInViewController.swift */,
 				8B6DB3992C0F058700804DE9 /* MainViewController.swift */,
@@ -314,6 +317,7 @@
 				8B95FA932C1E9AC100C4CB83 /* TokenAPI.swift in Sources */,
 				8B8725582C02797800E2B9F8 /* CategoryViewCell.swift in Sources */,
 				8B8725642C0677FF00E2B9F8 /* TodoDetailViewController.swift in Sources */,
+				B2FD66DC2C252484004B428D /* ChangePwViewController.swift in Sources */,
 				8B6DB39E2C0F07E000804DE9 /* MyPageViewController.swift in Sources */,
 				8B87255C2C027C3A00E2B9F8 /* TodoViewCell.swift in Sources */,
 				8B6DB39A2C0F058700804DE9 /* MainViewController.swift in Sources */,

@@ -1,29 +1,32 @@
 //
-//  SignupViewController.swift
-//  Todo_list
+//  ChangePassword.swift
+//  TodoApp
 //
-//  Created by 이예나 on 5/28/24.
+//  Created by 이예나 on 6/21/24.
 //
+
+import Foundation
 import UIKit
 import SnapKit
 
-class SignupViewController: UIViewController, UITextFieldDelegate {
+
+class ChangePwViewController: UIViewController {
     // 라벨
-    private lazy var idLabel: UILabel = {
-        let label = UILabel()
-        label.text = "아이디"
-        return label
-    }()
-    
     private lazy var pwLabel: UILabel = {
         let label = UILabel()
         label.text = "비밀번호"
         return label
     }()
     
+    private lazy var changePwLabel: UILabel = {
+        let label = UILabel()
+        label.text = "변경 비밀번호"
+        return label
+    }()
+    
     private lazy var checkPwLabel: UILabel = {
         let label = UILabel()
-        label.text = "비밀번호 확인"
+        label.text = "변경 비밀번호 확인"
         return label
     }()
     
@@ -98,7 +101,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         return textField
     }()
     
-    //아이디, 비밀번호 조건 
+    //아이디, 비밀번호 조건
     func isValidUserId(_ userId: String) -> Bool {
         return userId.count >= 5 && userId.count <= 10
     }

@@ -15,7 +15,7 @@ class MainViewController: UIViewController {
     
     // todoList 로고 구현 - 배열과 랜덤한 인덱스 사용
     private let logoImage: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LongLogo"))
+        let imageView = UIImageView(image: UIImage(named: "longLogo"))
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
